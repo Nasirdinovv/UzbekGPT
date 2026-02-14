@@ -11,6 +11,7 @@ class user(models.Model):
 
 
 class uzbekGPT(models.Model):
+    
     pass
 
 

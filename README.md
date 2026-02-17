@@ -5,4 +5,4 @@
 
 1 - user kirganda regiter yoki login bo'limidan o'tishi kerak
 2 - Dashboard ga o'tganda AI dan ro'lni tanlash kerek 
-3 - 
+3 - # O-zbekGPT

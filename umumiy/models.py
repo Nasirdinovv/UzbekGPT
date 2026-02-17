@@ -18,3 +18,20 @@ class User_profile(AbstractUser):
         return self.email
 
     
+class Ai_agent(models.Model):
+    name = models.CharField(max_length=255)
+    kasbi = models.CharField(max_length=255)
+    shaxsiyati = models.TextField()
+
+    def __str__(self):
+        return f"{self.name} - {self.kasbi}"
+    
+class History(models.Model):
+    user = models.ForeignKey(User_profile, on_delete=models.CASCADE)
+    agent = models.ForeignKey(Ai_agent, on_delete=models.CASCADE)
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    kimdan = models.CharField(choices=[("user", "User"), ("agent", "Agent")], max_length=10)
+
+    def __str__(self):
+        return f"{self.user.email} - {self.agent.name} - {self.timestamp}"

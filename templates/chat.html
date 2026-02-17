@@ -1,11 +1,124 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>UzbekGPT Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top left, #ebf4f5, #e8ecef);
+        }
+
+        .glass-header {
+            background: rgba(45, 55, 72, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .chat-bubble-bot {
+            background: #4a5568;
+            border-radius: 20px 20px 20px 5px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .chat-bubble-user {
+            background: white;
+            border-radius: 20px 20px 5px 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .input-glass {
+            background: rgba(45, 55, 72, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+        }
+
+        .pro-badge {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .avatar-shadow {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+    </style>
 </head>
-<body>
-    
+<body class="h-screen flex flex-col overflow-hidden">
+
+    <nav class="glass-header px-6 py-4 flex items-center justify-between shadow-xl z-50">
+        <div class="flex items-center gap-3">
+            <div class="flex gap-1">
+                <div class="w-3 h-3 bg-white rounded-full"></div>
+                <div class="w-3 h-3 bg-gray-400 rounded-full"></div>
+                <div class="w-3 h-3 bg-gray-500 rounded-full"></div>
+            </div>
+            <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400 ml-2">
+                UzbekGPT <span class="pro-badge text-white text-[10px] px-2 py-0.5 rounded-full align-middle ml-1">PRO</span>
+            </h1>
+        </div>
+        <button class="bg-gray-700/50 hover:bg-gray-600 text-white w-10 h-10 rounded-xl transition-all border border-gray-600">
+            <i class="fa-solid fa-plus"></i>
+        </button>
+    </nav>
+
+    <main class="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 pb-40">
+        
+        <div class="max-w-4xl mx-auto flex items-end gap-3">
+            <div class="w-12 h-12 bg-gradient-to-br from-indigo-600 to-purple-700 rounded-full flex items-center justify-center text-white text-xl avatar-shadow shrink-0">
+                <i class="fa-solid fa-robot"></i>
+            </div>
+            <div class="chat-bubble-bot p-5 text-white max-w-[80%] relative">
+                <p class="text-sm leading-relaxed">Assalomu alaykum! Men sizning AI yordamchingizman. Bugun sizga qanday yordam bera olaman?</p>
+                <div class="absolute -left-2 bottom-0 w-4 h-4 bg-[#4a5568]" style="clip-path: polygon(100% 0, 0% 100%, 100% 100%);"></div>
+            </div>
+        </div>
+
+        <div class="max-w-4xl mx-auto flex flex-row-reverse items-end gap-3">
+            <div class="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center text-white text-xl avatar-shadow shrink-0">
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="chat-bubble-user p-5 text-gray-800 max-w-[80%] relative">
+                <p class="text-sm leading-relaxed font-medium">Django va Tailwindni qanday bog'lasam bo'ladi?</p>
+                <div class="absolute -right-2 bottom-0 w-4 h-4 bg-white" style="clip-path: polygon(0 0, 0 100%, 100% 100%);"></div>
+            </div>
+        </div>
+
+        {% for chat in chats %}
+        <div class="max-w-4xl mx-auto flex {% if chat.is_user %}flex-row-reverse{% endif %} items-end gap-3">
+            <div class="w-12 h-12 {% if chat.is_user %}bg-cyan-500{% else %}bg-indigo-600{% endif %} rounded-full flex items-center justify-center text-white shrink-0 avatar-shadow">
+                <i class="fa-solid {% if chat.is_user %}fa-user{% else %}fa-robot{% endif %} text-lg"></i>
+            </div>
+            <div class="{% if chat.is_user %}chat-bubble-user text-gray-800{% else %}chat-bubble-bot text-white{% endif %} p-5 max-w-[80%]">
+                <p class="text-sm leading-relaxed">{{ chat.message }}</p>
+            </div>
+        </div>
+        {% endfor %}
+
+    </main>
+
+    <footer class="fixed bottom-6 left-0 w-full px-4">
+        <div class="max-w-4xl mx-auto input-glass p-4 shadow-2xl">
+            <form method="POST" class="flex items-center gap-4">
+                {% csrf_token %}
+                <div class="flex-1 bg-gray-800/50 rounded-2xl px-4 py-2 border border-gray-700">
+                    <span class="text-[10px] text-gray-400 block uppercase font-bold tracking-widest mb-1">Xabar yozing...</span>
+                    <input type="text" name="message" class="bg-transparent w-full text-white outline-none placeholder-gray-500 text-sm" placeholder="UzbekGPT bilan muloqot qiling">
+                </div>
+                <div class="flex gap-2">
+                    <button type="submit" class="w-12 h-12 bg-emerald-500 hover:bg-emerald-400 text-white rounded-2xl flex items-center justify-center transition-all shadow-lg shadow-emerald-500/30">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+            </form>
+            <p class="text-[10px] text-gray-400 text-center mt-3 font-medium">
+                UzbekGPT Pro xatolarga yo'l qo'yishi mumkin. Muhim ma'lumotlarni tekshiring.
+            </p>
+        </div>
+    </footer>
+
 </body>
 </html>

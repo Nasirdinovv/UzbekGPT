@@ -87,16 +87,27 @@
             </div>
         </div>
 
-        {% for chat in chats %}
-        <div class="max-w-4xl mx-auto flex {% if chat.is_user %}flex-row-reverse{% endif %} items-end gap-3">
-            <div class="w-12 h-12 {% if chat.is_user %}bg-cyan-500{% else %}bg-indigo-600{% endif %} rounded-full flex items-center justify-center text-white shrink-0 avatar-shadow">
-                <i class="fa-solid {% if chat.is_user %}fa-user{% else %}fa-robot{% endif %} text-lg"></i>
-            </div>
-            <div class="{% if chat.is_user %}chat-bubble-user text-gray-800{% else %}chat-bubble-bot text-white{% endif %} p-5 max-w-[80%]">
-                <p class="text-sm leading-relaxed">{{ chat.message }}</p>
-            </div>
+{% for chat in chats %}
+    <div class="max-w-4xl mx-auto flex flex-row-reverse items-end gap-3">
+        <div class="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center text-white shrink-0 avatar-shadow">
+            <i class="fa-solid fa-user"></i>
         </div>
-        {% endfor %}
+        <div class="chat-bubble-user p-5 text-gray-800 max-w-[80%] relative">
+            <p class="text-sm leading-relaxed">{{ chat.user_message }}</p>
+            <div class="absolute -right-2 bottom-0 w-4 h-4 bg-white" style="clip-path: polygon(0 0, 0 100%, 100% 100%);"></div>
+        </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto flex items-end gap-3">
+        <div class="w-12 h-12 bg-gradient-to-br from-indigo-600 to-purple-700 rounded-full flex items-center justify-center text-white shrink-0 avatar-shadow">
+            <i class="fa-solid fa-robot"></i>
+        </div>
+        <div class="chat-bubble-bot p-5 text-white max-w-[80%] relative">
+            <p class="text-sm leading-relaxed">{{ chat.ai_response }}</p>
+            <div class="absolute -left-2 bottom-0 w-4 h-4 bg-[#4a5568]" style="clip-path: polygon(100% 0, 0% 100%, 100% 100%);"></div>
+        </div>
+    </div>
+{% endfor %}
 
     </main>
 
@@ -121,4 +132,8 @@
     </footer>
 
 </body>
+<script>
+    const mainArea = document.querySelector('main');
+    mainArea.scrollTop = mainArea.scrollHeight;
+</script>
 </html>

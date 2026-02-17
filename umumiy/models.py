@@ -27,11 +27,17 @@ class Ai_agent(models.Model):
         return f"{self.name} - {self.kasbi}"
     
 class History(models.Model):
+
+    FROM = [
+        ("user", "User"),
+        ("agent", "Agent")
+    ]
+
     user = models.ForeignKey(User_profile, on_delete=models.CASCADE)
     agent = models.ForeignKey(Ai_agent, on_delete=models.CASCADE)
     message = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
-    kimdan = models.CharField(choices=[("user", "User"), ("agent", "Agent")], max_length=10)
+    kimdan = models.CharField(choices=FROM, max_length=10)
 
     def __str__(self):
         return f"{self.user.email} - {self.agent.name} - {self.timestamp}"

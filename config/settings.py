@@ -121,4 +121,3 @@ STATIC_URL = 'static/'
 STATIC_ROOT = 'staticfiles'
 
 
-AUTH_USER_MODEL = "umumiy.User_profile"

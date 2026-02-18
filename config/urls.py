@@ -16,7 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from umumiy import views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('chat/', views.chat_view, name='chat'),
+    path('chat/send/', views.send_message, name='send_message'),
 ]
+

@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kirish — NexusAI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'DM Sans', sans-serif; }
+    h1, h2, h3, .brand { font-family: 'Syne', sans-serif; }
+
+    body {
+      background: #0a0a0f;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .bg-grid {
+      position: fixed; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(99,102,241,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,102,241,.06) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: .35;
+      animation: drift 8s ease-in-out infinite alternate;
+    }
+    .orb-1 { width:500px; height:500px; background:#6366f1; top:-120px; left:-120px; }
+    .orb-2 { width:400px; height:400px; background:#8b5cf6; bottom:-100px; right:-80px; animation-delay:3s; }
+    .orb-3 { width:300px; height:300px; background:#06b6d4; top:40%; left:50%; animation-delay:6s; }
+
+    @keyframes drift {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(30px,20px) scale(1.1); }
+    }
+
+    .glass-card {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      backdrop-filter: blur(24px);
+      box-shadow: 0 32px 80px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .input-field {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      color: #f1f5f9;
+      transition: all .25s;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #6366f1;
+      background: rgba(99,102,241,.08);
+      box-shadow: 0 0 0 3px rgba(99,102,241,.15);
+    }
+    .input-field::placeholder { color: rgba(255,255,255,.3); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      transition: all .25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-primary::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, #818cf8, #a78bfa);
+      opacity: 0; transition: opacity .25s;
+    }
+    .btn-primary:hover::after { opacity: 1; }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(99,102,241,.5); }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary span { position: relative; z-index: 1; }
+
+    .logo-ring {
+      width: 56px; height: 56px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 32px rgba(99,102,241,.4);
+    }
+
+    .alert-error {
+      background: rgba(239,68,68,.1);
+      border: 1px solid rgba(239,68,68,.25);
+      border-radius: 10px;
+      color: #fca5a5;
+    }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform: translateY(24px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp .6s ease forwards; }
+    .fade-up-2 { animation: fadeUp .6s .1s ease both; }
+    .fade-up-3 { animation: fadeUp .6s .2s ease both; }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+
+  <div class="bg-grid"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="relative z-10 w-full max-w-md px-4">
+
+    <!-- Logo + Heading -->
+    <div class="text-center mb-8 fade-up">
+      <div class="logo-ring mx-auto mb-4">
+        <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h1 class="text-white text-3xl font-extrabold tracking-tight brand">O'zbekGPT</h1>
+      <p class="text-slate-400 text-sm mt-1">Hisobingizga kiring</p>
+    </div>
+
+    <!-- Card -->
+    <div class="glass-card rounded-2xl p-8 fade-up-2">
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert-error px-4 py-3 mb-5 text-sm flex items-center gap-2">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#f87171" stroke-width="2"/><path d="M12 8v4M12 16h.01" stroke="#f87171" stroke-width="2" stroke-linecap="round"/></svg>
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="POST" action="{% url 'login_user' %}" class="space-y-5">
+        {% csrf_token %}
+
+        <div>
+          <label class="text-slate-300 text-sm font-medium block mb-2">Email</label>
+          <input
+            type="email" name="email" required
+            placeholder="email kiriting..."
+            class="input-field w-full px-4 py-3 rounded-xl text-sm"
+          />
+        </div>
+
+        <div>
+          <label class="text-slate-300 text-sm font-medium block mb-2">Parol</label>
+          <div class="relative">
+            <input
+              type="password" name="password" id="passwordField" required
+              placeholder="••••••••"
+              class="input-field w-full px-4 py-3 pr-12 rounded-xl text-sm"
+            />
+            <button type="button" onclick="togglePass()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 transition-colors">
+              <svg id="eyeIcon" width="20" height="20" fill="none" viewBox="0 0 24 24">
+                <path d="M1 12C2.73 7.61 7 4 12 4s9.27 3.61 11 8c-1.73 4.39-6 8-11 8S2.73 16.39 1 12z" stroke="currentColor" stroke-width="2"/>
+                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary w-full py-3 rounded-xl text-white font-semibold text-sm mt-2">
+          <span>Kirish →</span>
+        </button>
+      </form>
+
+      <p class="text-center text-slate-500 text-sm mt-6">
+        Hisob yo'qmi?
+        <a href="{% url 'login_user' %}" class="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">Ro'yxatdan o'ting</a>
+      </p>
+    </div>
+
+    <p class="text-center text-slate-600 text-xs mt-6 fade-up-3">O'zbekGPT · Matematika · Tarix · Suhbat</p>
+  </div>
+
+  <script>
+    function togglePass() {
+      const f = document.getElementById('passwordField');
+      f.type = f.type === 'password' ? 'text' : 'password';
+    }
+  </script>
+</body>
+</html>

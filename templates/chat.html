@@ -1,170 +1,751 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-    <meta charset="UTF-8">
-    <title>UzbekGPT | Ultimate Edition</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #080a12; color: #e2e8f0; }
-        .custom-scroll::-webkit-scrollbar { width: 3px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
-        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
-        .hidden { display: none !important; }
-        .active-mode { border-color: #3b82f6; background: rgba(59, 130, 246, 0.1); }
-    </style>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NexusAI — Chat</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    * { font-family: 'DM Sans', sans-serif; box-sizing: border-box; }
+    h1, h2, .brand { font-family: 'Syne', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+
+    html, body { height: 100%; margin: 0; }
+    body { background: #08080e; color: #e2e8f0; display: flex; }
+
+    /* ── Sidebar ── */
+    #sidebar {
+      width: 260px; flex-shrink: 0;
+      background: rgba(255,255,255,.03);
+      border-right: 1px solid rgba(255,255,255,.06);
+      display: flex; flex-direction: column;
+      height: 100vh;
+      transition: transform .3s;
+    }
+
+    .sidebar-header {
+      padding: 20px 16px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+
+    .logo-ring {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(99,102,241,.4);
+      flex-shrink: 0;
+    }
+
+    .new-chat-btn {
+      display: flex; align-items: center; gap:8px;
+      background: rgba(99,102,241,.12);
+      border: 1px solid rgba(99,102,241,.25);
+      color: #a5b4fc;
+      border-radius: 10px;
+      padding: 9px 14px;
+      font-size: 13px; font-weight: 500;
+      cursor: pointer;
+      transition: all .2s;
+      text-decoration: none;
+      margin: 12px 12px 8px;
+      width: calc(100% - 24px);
+      justify-content: center;
+    }
+    .new-chat-btn:hover {
+      background: rgba(99,102,241,.22);
+      border-color: rgba(99,102,241,.5);
+      color: #c7d2fe;
+    }
+
+    .sessions-list { flex: 1; overflow-y: auto; padding: 4px 8px; }
+    .sessions-list::-webkit-scrollbar { width: 4px; }
+    .sessions-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 4px; }
+
+    .session-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 10px; border-radius: 8px;
+      cursor: pointer; transition: background .2s;
+      margin-bottom: 2px; gap: 8px;
+    }
+    .session-item:hover { background: rgba(255,255,255,.06); }
+    .session-item.active { background: rgba(99,102,241,.15); border: 1px solid rgba(99,102,241,.2); }
+
+    .session-title {
+      font-size: 12.5px; color: #94a3b8;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      flex: 1;
+    }
+    .session-item.active .session-title { color: #c7d2fe; }
+
+    .del-btn {
+      opacity: 0; color: #64748b; cursor: pointer;
+      transition: opacity .2s, color .2s;
+      flex-shrink: 0; background: none; border: none; padding: 2px;
+    }
+    .session-item:hover .del-btn { opacity: 1; }
+    .del-btn:hover { color: #f87171; }
+
+    .sidebar-footer {
+      padding: 12px;
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+
+    .user-badge {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 10px; border-radius: 10px;
+      background: rgba(255,255,255,.04);
+    }
+    .avatar {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; color: white;
+      flex-shrink: 0;
+    }
+
+    /* ── Main ── */
+    #main { flex: 1; display: flex; flex-direction: column; height: 100vh; min-width: 0; }
+
+    /* ── Messages ── */
+    #messages {
+      flex: 1; overflow-y: auto;
+      padding: 32px 0;
+      scroll-behavior: smooth;
+    }
+    #messages::-webkit-scrollbar { width: 4px; }
+    #messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,.08); border-radius: 4px; }
+
+    .message-wrap { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+
+    .msg-row { display: flex; gap: 12px; margin-bottom: 24px; animation: msgIn .3s ease both; }
+    .msg-row.user { flex-direction: row-reverse; }
+
+    @keyframes msgIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg-avatar {
+      width: 32px; height: 32px; border-radius: 8px;
+      flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700;
+    }
+    .msg-avatar.ai {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      box-shadow: 0 4px 12px rgba(99,102,241,.35);
+    }
+    .msg-avatar.user-av {
+      background: linear-gradient(135deg, #06b6d4, #0284c7);
+      box-shadow: 0 4px 12px rgba(6,182,212,.3);
+    }
+
+    .msg-bubble {
+      max-width: 80%; padding: 12px 16px;
+      border-radius: 16px; font-size: 14px; line-height: 1.65;
+    }
+    .msg-row.user .msg-bubble {
+      background: linear-gradient(135deg, #1e40af, #1d4ed8);
+      border: 1px solid rgba(59,130,246,.3);
+      color: #dbeafe;
+      border-top-right-radius: 4px;
+    }
+    .msg-row.ai .msg-bubble {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.08);
+      color: #cbd5e1;
+      border-top-left-radius: 4px;
+    }
+
+    /* LINK VA MARKDOWN UCHUN STYLELAR */
+    .msg-bubble a { color: #818cf8; text-decoration: underline; font-weight: 500; }
+    .msg-bubble a:hover { color: #a5b4fc; }
+    .msg-bubble ul, .msg-bubble ol { margin-left: 20px; }
+    .msg-bubble li { list-style: disc; }
+
+    .msg-bubble pre {
+      background: rgba(0,0,0,.4);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 8px;
+      padding: 12px; margin: 8px 0;
+      overflow-x: auto; font-size: 12px;
+    }
+
+    /* ── Welcome screen ── */
+    #welcome {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 40px 24px;
+    }
+
+    .welcome-logo {
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-radius: 20px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 16px 48px rgba(99,102,241,.4);
+      margin-bottom: 20px;
+    }
+
+    .suggestion-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 24px; width: 100%; max-width: 520px; }
+    .suggestion-card {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 12px; padding: 14px 16px;
+      cursor: pointer; transition: all .2s;
+      font-size: 13px; color: #94a3b8;
+      text-align: left;
+    }
+    .suggestion-card:hover {
+      background: rgba(99,102,241,.1);
+      border-color: rgba(99,102,241,.3);
+      color: #c7d2fe;
+      transform: translateY(-2px);
+    }
+    .suggestion-card .icon { font-size: 20px; margin-bottom: 6px; display: block; }
+
+    /* ── Input area ── */
+    #input-area {
+      padding: 0px
+      border-top: 1px solid rgba(255,255,255,.06);
+      background: rgba(0,0,0,.2);
+    }
+
+    .input-wrap {
+      max-width: 760px; margin: 0 auto;
+      display: flex; align-items: flex-end; gap: 10px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 16px; padding: 10px 12px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .input-wrap:focus-within {
+      border-color: rgba(99,102,241,.5);
+      box-shadow: 0 0 0 3px rgba(99,102,241,.1);
+    }
+
+    #userInput {
+      flex: 1; background: transparent;
+      border: none; outline: none;
+      color: #f1f5f9; font-size: 14px; line-height: 1.5;
+      resize: none; max-height: 160px;
+      font-family: 'DM Sans', sans-serif;
+    }
+    #userInput::placeholder { color: rgba(255,255,255,.3); }
+    #userInput::-webkit-scrollbar { width: 3px; }
+    #userInput::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); }
+
+    #sendBtn {
+      width: 38px; height: 38px; flex-shrink: 0;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border: none; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all .2s;
+      box-shadow: 0 4px 12px rgba(99,102,241,.4);
+    }
+    #sendBtn:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(99,102,241,.5); }
+    #sendBtn:active { transform: scale(.97); }
+    #sendBtn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+    /* Typing indicator */
+    .typing-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #6366f1; display: inline-block;
+      animation: bounce .9s ease-in-out infinite;
+    }
+    .typing-dot:nth-child(2) { animation-delay: .15s; }
+    .typing-dot:nth-child(3) { animation-delay: .3s; }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); opacity: .5; }
+      50%       { transform: translateY(-5px); opacity: 1; }
+    }
+
+    /* Mobile sidebar toggle */
+    #sidebarToggle { display: none; }
+    @media (max-width: 640px) {
+      #sidebar { position: fixed; z-index: 50; transform: translateX(-100%); }
+      #sidebar.open { transform: translateX(0); }
+      #sidebarToggle { display: flex; }
+    }
+
+    .logout-link {
+      display: flex; align-items: center; gap: 6px;
+      color: #64748b; font-size: 12px; text-decoration: none;
+      padding: 4px 6px; border-radius: 6px; transition: color .2s;
+    }
+    .logout-link:hover { color: #f87171; }
+    .settings-option, .user-badge {
+    user-select: none; /* Matnni tanlashni o'chiradi */
+    -webkit-user-select: none;
+}
+    .settings-option:hover {
+        background: rgba(255,255,255,0.08);
+    }
+    /* Light mode uchun mukammal ranglar */
+body.light-mode {
+    background: #f1f5f9 !important; /* Bir oz kulrangroq fon */
+    color: #1e293b !important;
+}
+
+body.light-mode #sidebar {
+    background: #ffffff !important;
+    border-right: 1px solid #e2e8f0;
+}
+
+/* AI xabari light mode'da */
+body.light-mode .msg-row.ai .msg-bubble {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #334155 !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* User xabari light mode'da (ko'k rangni saqlab qoladi) */
+body.light-mode .msg-row.user .msg-bubble {
+    background: #2563eb !important;
+    color: #ffffff !important;
+    border: none;
+}
+
+/* Pastki yozuv yozish qismi */
+body.light-mode #input-area {
+    background: #f8fafc !important;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* Sidebar umumiy strukturasi */
+#sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.sessions-list {
+    flex: 1; /* Suhbatlar ro'yxati o'rtani egallaydi */
+    overflow-y: auto;
+}
+
+/* Sidebar Footer - hamma narsani pastga tushiradi */
+.sidebar-footer {
+    margin-top: auto; /* Avtomatik ravishda eng pastga tushadi */
+    padding: 12px;
+    border-top: 1px solid rgba(255,255,255,.06);
+    position: relative;
+}
+
+/* Light mode rejimi uchun maxsus ranglar */
+body.light-mode {
+    background: #f8fafc !important;
+    color: #0f172a !important;
+}
+
+body.light-mode #sidebar {
+    background: #ffffff !important;
+    border-right: 1px solid #e2e8f0;
+}
+
+/* Light mode da AI va User xabarlari */
+body.light-mode .msg-row.ai .msg-bubble {
+    background: #f1f5f9 !important;
+    color: #1e293b !important;
+    border: 1px solid #e2e8f0;
+}
+
+body.light-mode .msg-row.user .msg-bubble {
+    background: #10b981 !important; /* Yashilroq yoki ko'kroq */
+    color: #ffffff !important;
+}
+
+/* Sozlamalar menyusi (Rasmda ko'rsatilganidek chap pastga) */
+#settingsMenu {
+    display: none;
+    position: absolute;
+    bottom: 75px; /* User badge dan biroz tepada */
+    left: 12px;
+    width: 230px;
+    background: #13131f;
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+body.light-mode #settingsMenu {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+}
+
+body.light-mode .settings-option {
+    color: #1e293b !important;
+}
+
+/* Belgilanib qolmaslik uchun (Selection error fix) */
+.user-badge, .settings-option {
+    user-select: none;
+    -webkit-user-select: none;
+}
+</style>
 </head>
-<body class="h-screen flex overflow-hidden">
+<body>
 
-    <aside class="w-80 glass flex flex-col h-full z-50">
-        <div class="p-6">
-            <button onclick="window.location.reload()" class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-2xl py-4 font-bold shadow-lg shadow-blue-500/20 transition active:scale-95">
-                <i class="fa-solid fa-plus-circle mr-2"></i> Yangi suhbat
-            </button>
+<div id="sidebar">
+  <div class="sidebar-header">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="logo-ring">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <span class="brand text-white font-bold text-lg">O'zbekGPT</span>
+    </div>
+  </div>
+
+  <a href="#" class="new-chat-btn">
+    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" style="margin-right:8px">
+      <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+    Yangi suhbat
+  </a>
+
+  <div class="sessions-list">
+    <p style="font-size:11px;color:#475569;padding:4px 8px 8px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;">Suhbatlar</p>
+
+    {% for session in sessions %}
+      <div class="session-item {% if current_session and current_session.id == session.id %}active{% endif %}">
+        <a href="?session={{ session.id }}" style="flex:1;text-decoration:none;">
+          <div class="session-title">
+            <span style="margin-right:6px;">💬</span>{{ session.title|truncatechars:30 }}
+          </div>
+        </a>
+        <form method="POST" action="{% url 'delete_session' session.id %}" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="del-btn" title="O'chirish">
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24">
+              <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </form>
+      </div>
+    {% empty %}
+      <p style="font-size:12px;color:#334155;text-align:center;padding:20px 0;">Hali suhbat yo'q</p>
+    {% endfor %}
+  </div>
+
+</div>
+
+<div class="sidebar-footer">
+    <div id="settingsMenu">
+        <div class="settings-option" onclick="toggleDarkMode()">
+            <span id="theme-icon">🌙</span> <span id="theme-text">Qora fon</span>
         </div>
-
-        <div id="history-list" class="flex-1 overflow-y-auto px-4 custom-scroll space-y-2">
-            <p class="px-4 py-2 text-[10px] uppercase font-black text-slate-500 tracking-widest opacity-60">Suhbatlar tarixi</p>
-            <!-- {% for s in sessions %} -->
-            <div onclick="loadHistory('{{ s.id }}')" class="p-4 rounded-2xl hover:bg-white/5 cursor-pointer border border-transparent hover:border-blue-500/20 transition group">
-                <div class="flex items-center gap-3">
-                    <i class="fa-regular fa-comment text-blue-500"></i>
-                    <div class="overflow-hidden">
-                        <p class="text-[11px] font-bold truncate">{{ s.title }}</p>
-                        <p class="text-[9px] opacity-40 uppercase">{{ s.mode }}</p>
-                    </div>
-                </div>
-            </div>
-            <!-- {% endfor %} -->
+        <div class="settings-option" onclick="changeTheme()">
+            <span>🌈</span> Ranglar
         </div>
-
-        <div class="p-6 border-t border-white/5">
-            <button onclick="toggleModal('settings-modal')" class="w-full p-4 rounded-2xl flex items-center gap-3 hover:bg-white/5 transition">
-                <i class="fa-solid fa-sliders text-blue-500"></i>
-                <span class="text-sm font-semibold">Sozlamalar</span>
-            </button>
+        <div class="settings-option" onclick="resetTheme()">
+            <span>🔄</span> Reset
         </div>
-    </aside>
-
-    <main class="flex-1 flex flex-col relative">
-        <header class="h-20 flex items-center justify-between px-8 glass border-b border-white/5">
-            <div class="flex items-center gap-4">
-                <div class="w-10 h-10 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-                    <i class="fa-solid fa-robot text-white text-sm"></i>
-                </div>
-                <h2 class="font-bold text-sm tracking-tight">UzbekGPT <span id="header-mode" class="text-blue-500 ml-1"></span></h2>
+        <div style="height:1px; background:rgba(255,255,255,0.1); margin:4px 0;"></div>
+        <a href="" style="text-decoration:none; color:#f87171;">
+            <div class="settings-option">
+                <span>🚪</span> Chiqish
             </div>
-        </header>
-
-        <div id="dashboard" class="flex-1 overflow-y-auto p-10 flex flex-col items-center justify-center space-y-10">
-            <h1 class="text-4xl font-extrabold text-center">Yo'nalishni <span class="text-blue-600">tanlang</span></h1>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl">
-                <div onclick="setMode('Matematika')" class="p-8 rounded-[2.5rem] glass hover:border-blue-500/50 hover:scale-[1.02] transition-all cursor-pointer text-center group">
-                    <i class="fa-solid fa-calculator text-3xl text-orange-500 mb-4"></i>
-                    <h3 class="font-bold">Matematika</h3>
-                    <p class="text-[10px] opacity-40 mt-2">Faqat hisob-kitoblar</p>
-                </div>
-                <div onclick="setMode('Suhbat')" class="p-8 rounded-[2.5rem] glass hover:border-blue-500/50 hover:scale-[1.02] transition-all cursor-pointer text-center group">
-                    <i class="fa-solid fa-comments text-3xl text-blue-500 mb-4"></i>
-                    <h3 class="font-bold">Erkin Suhbat</h3>
-                    <p class="text-[10px] opacity-40 mt-2">Xohlagan mavzuda</p>
-                </div>
-                <div onclick="setMode('Tarix')" class="p-8 rounded-[2.5rem] glass hover:border-blue-500/50 hover:scale-[1.02] transition-all cursor-pointer text-center group">
-                    <i class="fa-solid fa-monument text-3xl text-emerald-500 mb-4"></i>
-                    <h3 class="font-bold">Tarix</h3>
-                    <p class="text-[10px] opacity-40 mt-2">O'tmishga sayohat</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="chat-window" class="flex-1 overflow-y-auto p-6 md:p-12 space-y-6 hidden custom-scroll"></div>
-
-        <div id="input-area" class="p-8 hidden">
-            <div class="max-w-4xl mx-auto relative glass rounded-[2.5rem] p-3 border border-white/10 shadow-2xl">
-                <div class="flex items-center gap-4 px-4">
-                    <textarea id="msg-input" rows="1" placeholder="Xabar yozing..." class="flex-1 bg-transparent border-none py-3 text-sm focus:outline-none resize-none"></textarea>
-                    <button onclick="sendMessage()" class="bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center hover:bg-blue-700 transition shadow-lg shadow-blue-500/20 active:scale-90">
-                        <i class="fa-solid fa-paper-plane text-xs"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <div id="settings-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
-        <div class="w-full max-w-md glass rounded-[3rem] p-10 border border-white/10">
-            <div class="flex justify-between items-center mb-8">
-                <h3 class="text-2xl font-black">Sozlamalar</h3>
-                <i onclick="toggleModal('settings-modal')" class="fa-solid fa-xmark cursor-pointer opacity-50 hover:opacity-100"></i>
-            </div>
-            <div class="space-y-6">
-                <div class="flex justify-between items-center p-4 glass rounded-2xl">
-                    <span class="text-sm font-bold">Model</span>
-                    <select class="bg-slate-800 text-xs p-2 rounded-lg outline-none"><option>Gemini 1.5 Flash</option><option>Gemini 1.5 Pro</option></select>
-                </div>
-                <button onclick="location.reload()" class="w-full py-4 bg-red-500/10 text-red-500 rounded-2xl text-[10px] font-black uppercase hover:bg-red-500 hover:text-white transition">Keshni tozalash</button>
-            </div>
-        </div>
+        </a>
     </div>
 
-    <script>
-        let currentMode = "";
-        const chatWin = document.getElementById('chat-window');
-
-        function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
-
-        function setMode(mode) {
-            currentMode = mode;
-            document.getElementById('dashboard').classList.add('hidden');
-            chatWin.classList.remove('hidden');
-            document.getElementById('input-area').classList.remove('hidden');
-            document.getElementById('header-mode').innerText = `| ${mode}`;
-            chatWin.innerHTML = "";
-            appendMsg(`Assalomu alaykum! **${mode}** bo'limi aktiv. Savolingizni bering.`, true);
-        }
-
-        async function sendMessage() {
-            const input = document.getElementById('msg-input');
-            const text = input.value.trim();
-            if(!text) return;
-
-            appendMsg(text, false);
-            input.value = "";
-
-            const response = await fetch('/chat/send/', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json', 'X-CSRFToken': '{{csrf_token}}'},
-                body: JSON.stringify({message: text, mode: currentMode})
-            });
-            const data = await response.json();
-            appendMsg(data.reply, true);
-        }
-
-        // TARIHXNI YUKLASH (Asosiy tuzatish)
-        async function loadHistory(sessionId) {
-            const response = await fetch(`/chat/history/${sessionId}/`);
-            const data = await response.json();
+    <div class="user-badge" onclick="toggleSettingsMenu()" style="display:flex; align-items:center; gap:12px; padding:10px; border-radius:12px; background:rgba(255,255,255,0.03); cursor:pointer; user-select:none;">
+        <div class="avatar" style="width:35px; height:35px; border-radius:10px; background:linear-gradient(45deg, #6366f1, #a855f7); display:flex; align-items:center; justify-content:center; color:white; font-weight:bold;">
             
-            currentMode = data.mode;
-            document.getElementById('dashboard').classList.add('hidden');
-            chatWin.classList.remove('hidden');
-            document.getElementById('input-area').classList.remove('hidden');
-            document.getElementById('header-mode').innerText = `| ${data.mode}`;
-            
-            chatWin.innerHTML = "";
-            data.messages.forEach(m => appendMsg(m.text, m.is_bot));
-        }
+        </div>
+        <div style="flex:1; overflow:hidden;">
+            <div style="font-size:14px; font-weight:500; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">
+                {{ request.user.username }}
+            </div>
+            <div style="font-size:11px; opacity:0.5;">Sozlamalar</div>
+        </div>
+        <div style="opacity:0.3; font-size:10px;">▲</div>
+    </div>
+</div>  
 
-        function appendMsg(text, isBot) {
-            const html = `<div class="flex ${isBot ? 'justify-start' : 'justify-end'} animate-in fade-in slide-in-from-bottom-2">
-                <div class="${isBot ? 'glass' : 'bg-blue-600 shadow-blue-500/20'} p-5 rounded-[1.8rem] text-sm max-w-[80%] leading-relaxed">
-                    ${text.replace(/\n/g, '<br>')}
-                </div>
-            </div>`;
-            chatWin.insertAdjacentHTML('beforeend', html);
-            chatWin.scrollTo({top: chatWin.scrollHeight, behavior: 'smooth'});
-        }
-    </script>
+<div id="main">
+
+  <div style="display:none;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.3);" id="topbar">
+    <button id="sidebarToggle" onclick="toggleSidebar()" style="background:rgba(255,255,255,.06);border:none;color:#94a3b8;border-radius:8px;padding:7px;cursor:pointer;display:flex;">
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <span class="brand text-white font-bold">NexusAI</span>
+  </div>
+
+  {% if not current_session %}
+  <div id="welcome">
+    <div class="welcome-logo">
+      <svg width="36" height="36" fill="none" viewBox="0 0 24 24">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h2 class="text-white text-2xl font-bold text-center">Salom, {{ request.user.username }}! 👋</h2>
+    <p style="color:#64748b;font-size:14px;margin-top:8px;text-align:center;">Men matematik, tarix va umumiy savollaringizga javob beraman.</p>
+
+    <div class="suggestion-grid">
+      <div class="suggestion-card" onclick="useSuggestion(this)">
+        <span class="icon">🧮</span>
+        Integral hisoblashni tushuntirib ber
+      </div>
+      <div class="suggestion-card" onclick="useSuggestion(this)">
+        <span class="icon">🏛️</span>
+        Ikkinchi Jahon Urushi qachon boshlangan?
+      </div>
+      <div class="suggestion-card" onclick="useSuggestion(this)">
+        <span class="icon">📐</span>
+        Pifagor teoremasi nima va qanday ishlatiladi?
+      </div>
+      <div class="suggestion-card" onclick="useSuggestion(this)">
+        <span class="icon">🌍</span>
+        O'zbekiston tarixi haqida gapirib ber
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div id="messages">
+    <div class="message-wrap">
+      {% for msg in chat_messages %}
+        <div class="msg-row {% if msg.role == 'user' %}user{% else %}ai{% endif %}">
+          <div class="msg-avatar {% if msg.role == 'user' %}user-av{% else %}ai{% endif %}">
+            {% if msg.role == 'user' %}{{ request.user.username|first|upper }}
+            {% else %}N{% endif %}
+          </div>
+          <div class="msg-bubble">
+            {% if msg.role == 'assistant' %}
+              <script>document.write(marked.parse(`{{ msg.content|escapejs }}`));</script>
+            {% else %}
+              {{ msg.content|linebreaksbr }}
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <div id="input-area">
+    <div class="input-wrap">
+      <textarea
+        id="userInput"
+        rows="1"
+        placeholder="Savolni yozing… (Enter = yuborish, Shift+Enter = yangi qator)"
+        oninput="autoResize(this)"
+        onkeydown="handleKey(event)"
+      ></textarea>
+      <button id="sendBtn" onclick="sendMessage()">
+        <svg width="17" height="17" fill="none" viewBox="0 0 24 24">
+          <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <p style="text-align:center;font-size:11px;color:#334155;margin-top:8px;">O'zbekGPT xatolar qilishi mumkin. Muhim qarorlar uchun tekshiring.</p>
+  </div>
+</div>
+
+<script>
+  const CSRF = '{{ csrf_token }}';
+  let currentSessionId = {% if current_session %}{{ current_session.id }}{% else %}null{% endif %};
+  let isThinking = false;
+
+  function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 160) + 'px';
+  }
+
+  function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  }
+
+  function useSuggestion(el) {
+    const text = el.innerText.replace(/^[^\w]+/, '').trim();
+    document.getElementById('userInput').value = text;
+    sendMessage();
+  }
+
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+  }
+
+  function scrollBottom() {
+    const m = document.getElementById('messages');
+    if (m) m.scrollTop = m.scrollHeight;
+  }
+
+  function addMessage(role, content) {
+    const welcome = document.getElementById('welcome');
+    if (welcome) {
+      const main = document.getElementById('main');
+      welcome.remove();
+      const msgDiv = document.createElement('div');
+      msgDiv.id = 'messages';
+      msgDiv.innerHTML = '<div class="message-wrap"></div>';
+      main.insertBefore(msgDiv, document.getElementById('input-area'));
+    }
+
+    const wrap = document.querySelector('.message-wrap');
+    const isUser = role === 'user';
+
+    const row = document.createElement('div');
+    row.className = 'msg-row ' + (isUser ? 'user' : 'ai');
+    row.innerHTML = `
+      <div class="msg-avatar ${isUser ? 'user-av' : 'ai'}">
+       
+      </div>
+      <div class="msg-bubble">${isUser ? content.replace(/\n/g, '<br>') : marked.parse(content)}</div>
+    `;
+    wrap.appendChild(row);
+    scrollBottom();
+    return row.querySelector('.msg-bubble');
+  }
+
+  function showTyping() {
+    const bubble = addMessage('ai', '');
+    bubble.innerHTML = `
+      <div class="typing-indicator">
+        <span class="typing-dot"></span>
+        <span class="typing-dot" style="margin:0 3px"></span>
+        <span class="typing-dot"></span>
+      </div>
+    `;
+    return bubble;
+  }
+
+  async function sendMessage() {
+    if (isThinking) return;
+    const input = document.getElementById('userInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    isThinking = true;
+    input.value = '';
+    input.style.height = 'auto';
+    document.getElementById('sendBtn').disabled = true;
+
+    addMessage('user', text);
+    const typingBubble = showTyping();
+
+    try {
+   
+      const data = await resp.json();
+
+      // AI javobini chiqarishda MARKED ishlatamiz
+      typingBubble.innerHTML = marked.parse(data.reply);
+
+      if (!currentSessionId) {
+        currentSessionId = data.session_id;
+        window.history.replaceState({}, '', '?session=' + data.session_id);
+        location.reload();
+      }
+
+    } catch (err) {
+      typingBubble.innerHTML = '❌ Xatolik yuz berdi. Qayta urinib ko\'ring.';
+    }
+
+    isThinking = false;
+    document.getElementById('sendBtn').disabled = false;
+    scrollBottom();
+    input.focus();
+  }
+
+  scrollBottom();
+
+  if (window.innerWidth <= 640) {
+    document.getElementById('topbar').style.display = 'flex';
+  }
+  // 1. Menyuni ochish va yopish
+// Menyuni ochish
+function toggleSettingsMenu() {
+    const menu = document.getElementById('settingsMenu');
+    menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+}
+
+// Oq va Qora fon logikasi
+let isLightMode = localStorage.getItem('isLightMode') === 'true';
+
+function applyTheme() {
+    if (isLightMode) {
+        document.body.classList.add('light-mode');
+        document.getElementById('theme-icon').innerText = "🌙";
+        document.getElementById('theme-text').innerText = "Qora fon";
+    } else {
+        document.body.classList.remove('light-mode');
+        document.getElementById('theme-icon').innerText = "☀️";
+        document.getElementById('theme-text').innerText = "Oq fon";
+    }
+}
+applyTheme(); // Sahifa yuklanganda ishga tushadi
+
+function toggleDarkMode() {
+    isLightMode = !isLightMode;
+    localStorage.setItem('isLightMode', isLightMode);
+    
+    const icon = document.getElementById('theme-icon');
+    const text = document.getElementById('theme-text');
+
+    if (isLightMode) {
+        document.body.classList.add('light-mode');
+        icon.innerText = "🌙";
+        text.innerText = "Qora fon";
+    } else {
+        document.body.classList.remove('light-mode');
+        icon.innerText = "☀️";
+        text.innerText = "Oq fon";
+    }
+}
+
+// Rang effektini o'zgartirish
+let currentHue = localStorage.getItem('themeHue') || 0;
+document.body.style.filter = `hue-rotate(${currentHue}deg)`;
+
+function changeTheme() {
+    currentHue = (parseInt(currentHue) + 60) % 360;
+    document.body.style.filter = `hue-rotate(${currentHue}deg)`;
+    localStorage.setItem('themeHue', currentHue);
+}
+
+function resetTheme() {
+    localStorage.clear();
+    location.reload();
+}
+
+// Menyudan tashqariga bosilganda yopish
+window.onclick = function(event) {
+    const menu = document.getElementById('settingsMenu');
+    if (!event.target.closest('.sidebar-footer')) {
+        menu.style.display = 'none';
+    }
+}
+function updateBtnText(light) {
+    const icon = document.getElementById('theme-icon');
+    const text = document.getElementById('theme-text');
+    if (icon) icon.innerText = light ? "🌙" : "☀️";
+    if (text) text.innerText = light ? "Qora fon" : "Oq fon";
+}
+
+function resetTheme() {
+    localStorage.clear();
+    location.reload();
+}
+
+// Tashqariga bosilganda yopish
+window.addEventListener('click', function(e) {
+    const menu = document.getElementById('settingsMenu');
+    const badge = document.querySelector('.user-badge');
+    if (menu && !menu.contains(e.target) && !badge.contains(e.target)) {
+        menu.style.display = 'none';
+    }
+});
+
+</script>
 </body>
 </html>

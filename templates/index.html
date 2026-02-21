@@ -1,66 +1,93 @@
 <!DOCTYPE html>
 <html lang="uz">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>O'zbekGPT — Bosh sahifa</title>
+    <title>O'zbekGPT — Kelajak Intellekti</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+        body { font-family: 'Inter', sans-serif; }
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .neon-shadow {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
         }
     </style>
 </head>
+<body class="bg-[#0f172a] text-slate-200 min-h-screen flex items-center justify-center p-4">
 
-<body class="bg-slate-50 min-h-screen flex items-center justify-center">
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-900/20 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-900/20 rounded-full blur-[120px]"></div>
+    </div>
 
-    <div class="max-w-4xl w-full px-6 py-12">
-        <div class="bg-white rounded-2xl shadow-lg overflow-hidden grid grid-cols-1 md:grid-cols-2">
-            <div class="p-8 md:p-12">
-                <h1 class="text-3xl font-extrabold text-slate-800 mb-3">O'zbekGPT</h1>
-                <p class="text-slate-500 mb-6">Sun'iy intellekt asosida savollaringizga javob olishingiz, mashq
-                    qilishingiz va suhbatlashishingiz mumkin.</p>
+    <div class="max-w-4xl w-full">
+        <div class="glass rounded-3xl overflow-hidden grid grid-cols-1 md:grid-cols-2 shadow-2xl neon-shadow">
+            
+            <div class="p-8 md:p-14 flex flex-col justify-center">
+                <div class="flex items-center gap-2 mb-6">
+                    <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/50">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-2xl font-extrabold tracking-tight text-white">O'zbek<span class="text-indigo-500">GPT</span></span>
+                </div>
+
+                <h1 class="text-4xl font-bold text-white mb-4 leading-tight">Sun'iy intellekt bilan muloqot qiling</h1>
+                <p class="text-slate-400 mb-8 leading-relaxed">Savollaringizga javob oling, kod yozing yoki shunchaki fikr almashing. O'zbek tilidagi eng aqlli yordamchi.</p>
 
                 {% if request.user.is_authenticated %}
-                <p class="text-slate-600 mb-4">Xush kelibsiz, <span class="font-semibold">{{
-                        request.user.get_full_name|default:request.user.email }}</span></p>
-                <div class="flex gap-3">
-                    <a href="{% url 'chat' %}"
-                        class="inline-block px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg">Chatga
-                        o'tish</a>
-                    <a href="{% url 'logout_user' %}"
-                        class="inline-block px-4 py-2 border border-slate-200 rounded-lg text-slate-700 hover:bg-slate-50">Chiqish</a>
-                </div>
+                    <div class="flex flex-col gap-4">
+                        <div class="flex justify-between items-center gap-3 p-3 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl">
+                            <div class="w-10 h-10 mr-4 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold">
+                                {{ request.user.username|slice:":1"|upper }}
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-500">Xush kelibsiz</p>
+                                <p class="text-sm font-semibold text-white">{{ request.user.username }}</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <a href="{% url 'chat' %}" class="flex-1 text-center px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-all active:scale-95 shadow-lg shadow-indigo-600/30">Chatga o'tish</a>
+                            <a href="{% url 'logout_user' %}" class="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl transition-all">Chiqish</a>
+                        </div>
+                    </div>
                 {% else %}
-                <p class="text-slate-600 mb-4">Siz tizimga kirmagansiz — davom etish uchun tizimga kiring yoki
-                    ro'yxatdan o'ting.</p>
-                <div class="flex gap-3">
-                    <a href="{% url 'login_user' %}"
-                        class="inline-block px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg">Kirish</a>
-                    <a href="{% url 'login_user' %}"
-                        class="inline-block px-4 py-2 border border-slate-200 rounded-lg text-slate-700">Ro'yxatdan
-                        o'tish</a>
-                </div>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="{% url 'login_user' %}" class="text-center px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-all active:scale-95 shadow-lg shadow-indigo-600/30">Kirish</a>
+                        <a href="#" class="text-center px-8 py-4 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl transition-all border border-slate-700">Ro'yxatdan o'tish</a>
+                    </div>
+                    <p class="mt-6 text-sm text-slate-500 text-center sm:text-left">Davom etish uchun hisobingizga kiring.</p>
                 {% endif %}
             </div>
 
-            <div class="hidden md:flex items-center justify-center bg-gradient-to-br from-indigo-50 to-white p-8">
-                <div class="text-center px-6">
-                    <svg width="96" height="96" viewBox="0 0 24 24" fill="none" class="mx-auto mb-4">
-                        <path d="M12 2v6" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round"
-                            stroke-linejoin="round" />
-                        <path d="M6 6v6" stroke="#8b5cf6" stroke-width="1.5" stroke-linecap="round"
-                            stroke-linejoin="round" />
-                        <circle cx="12" cy="14" r="6" stroke="#06b6d4" stroke-width="1.5" />
-                    </svg>
-                    <h3 class="text-xl font-semibold text-slate-800">Aqlli yordamchi har doim yoningizda</h3>
-                    <p class="text-slate-500 mt-2">Matematika, tarix, suhbat va boshqa ko'p sohalarda yordam.</p>
+            <div class="hidden md:flex flex-col items-center justify-center bg-indigo-600/5 border-l border-white/5 p-12 relative overflow-hidden">
+                <div class="absolute w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl"></div>
+                
+                <div class="relative z-10 text-center">
+                    <div class="mb-6 inline-block p-6 bg-[#1e293b] rounded-3xl border border-white/10 shadow-2xl">
+                        <svg class="w-16 h-16 text-indigo-500 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Har doim tayyor</h3>
+                    <p class="text-slate-400 text-sm">Matematika, tarjima yoki ijodiy matnlar — hammasi bir joyda.</p>
+                </div>
+
+                <div class="mt-12 flex gap-2">
+                    <span class="w-2 h-2 bg-indigo-500 rounded-full"></span>
+                    <span class="w-2 h-2 bg-slate-700 rounded-full"></span>
+                    <span class="w-2 h-2 bg-slate-700 rounded-full"></span>
                 </div>
             </div>
+
         </div>
     </div>
 
 </body>
-
 </html>

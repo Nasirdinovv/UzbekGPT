@@ -1,26 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome Page</title>
-    <!-- Include the Play CDN script -->
+    <title>O'zbekGPT — Bosh sahifa</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
-    {% if request.user.is_authenticated %}
-    <h1>Welcome, {{ request.user.username }}!</h1>
-    {% else %}
-        <h1>Siz tizimga kirmagansiz tizimga kirish uchun bosing <a href="login_user">Login</a></h1>
 
-    <!-- Welcome Card -->
-    <div class="bg-white p-8 rounded-lg shadow-lg text-center">
-        <h1 class="text-4xl font-bold text-gray-800 mb-4">Welcome! {{ request.user.username }} </h1>
-        <a href="#" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition duration-300">
-            Hisobingizga o'tish 
-        </a>
+<body class="bg-slate-50 min-h-screen flex items-center justify-center">
+
+    <div class="max-w-4xl w-full px-6 py-12">
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden grid grid-cols-1 md:grid-cols-2">
+            <div class="p-8 md:p-12">
+                <h1 class="text-3xl font-extrabold text-slate-800 mb-3">O'zbekGPT</h1>
+                <p class="text-slate-500 mb-6">Sun'iy intellekt asosida savollaringizga javob olishingiz, mashq
+                    qilishingiz va suhbatlashishingiz mumkin.</p>
+
+                {% if request.user.is_authenticated %}
+                <p class="text-slate-600 mb-4">Xush kelibsiz, <span class="font-semibold">{{
+                        request.user.get_full_name|default:request.user.email }}</span></p>
+                <div class="flex gap-3">
+                    <a href="{% url 'chat' %}"
+                        class="inline-block px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg">Chatga
+                        o'tish</a>
+                    <a href="{% url 'logout_user' %}"
+                        class="inline-block px-4 py-2 border border-slate-200 rounded-lg text-slate-700 hover:bg-slate-50">Chiqish</a>
+                </div>
+                {% else %}
+                <p class="text-slate-600 mb-4">Siz tizimga kirmagansiz — davom etish uchun tizimga kiring yoki
+                    ro'yxatdan o'ting.</p>
+                <div class="flex gap-3">
+                    <a href="{% url 'login_user' %}"
+                        class="inline-block px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg">Kirish</a>
+                    <a href="{% url 'login_user' %}"
+                        class="inline-block px-4 py-2 border border-slate-200 rounded-lg text-slate-700">Ro'yxatdan
+                        o'tish</a>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="hidden md:flex items-center justify-center bg-gradient-to-br from-indigo-50 to-white p-8">
+                <div class="text-center px-6">
+                    <svg width="96" height="96" viewBox="0 0 24 24" fill="none" class="mx-auto mb-4">
+                        <path d="M12 2v6" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <path d="M6 6v6" stroke="#8b5cf6" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <circle cx="12" cy="14" r="6" stroke="#06b6d4" stroke-width="1.5" />
+                    </svg>
+                    <h3 class="text-xl font-semibold text-slate-800">Aqlli yordamchi har doim yoningizda</h3>
+                    <p class="text-slate-500 mt-2">Matematika, tarix, suhbat va boshqa ko'p sohalarda yordam.</p>
+                </div>
+            </div>
+        </div>
     </div>
-    {% endif %}
-</body>
-</html>
 
+</body>
+
+</html>

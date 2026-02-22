@@ -37,8 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'umumiy'
+    'umumiy',
     'tailwind',
+    'umumiytailwind',
 ]
 
 MIDDLEWARE = [
@@ -123,3 +124,5 @@ STATIC_ROOT = 'staticfiles'
 
 
 AUTH_USER_MODEL = 'umumiy.UserProfile'
+TAILWIND_APP_NAME = 'umumiytailwind'
+NPM_BIN_PATH = '/home/doniyor/.nvm/versions/node/v24.13.1/bin/npm'

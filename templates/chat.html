@@ -69,10 +69,10 @@
 <nav id="sidebar">
     <div class="p-6 font-bold text-2xl tracking-tighter" style="color: var(--accent)">O'zbekGPT</div>
     <div class="flex-1 overflow-y-auto p-4">
-        <button onclick="location.reload()" class="w-full p-3 rounded-xl border border-[var(--border)] hover:bg-white/5 transition mb-4">+ Yangi Chat</button>
+        <button onclick="location.reload()" class="w-full p-3 rounded-xl border border-(--border)] hover:bg-white/5 transition mb-4">+ Yangi Chat</button>
     </div>
 
-    <div class="p-4 border-t border-[var(--border)] relative">
+    <div class="p-4 border-t border-(--border)] relative">
         <div id="settingsMenu">
             <div class="mb-4">
                 <p class="text-[10px] opacity-50 mb-2 uppercase tracking-widest">Mavzu Rangi</p>
@@ -84,7 +84,7 @@
                 </div>
             </div>
 
-            <button onclick="toggleTheme()" id="themeBtn" class="w-full p-2 bg-white/5 border border-[var(--border)] rounded-lg text-xs mb-4">🌙 Tungi Rejim</button>
+            <button onclick="toggleTheme()" id="themeBtn" class="w-full p-2 bg-white/5 border border-(--border)] rounded-lg text-xs mb-4">🌙 Tungi Rejim</button>
 
             <div class="mb-4">
                 <div class="flex justify-between text-[10px] opacity-50 mb-1 uppercase">
@@ -94,14 +94,14 @@
                 <input type="range" min="12" max="24" value="15" class="w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer" oninput="updateConfig('font', this.value)">
             </div>
 
-            <hr class="border-[var(--border)] mb-4">
+            <hr class="border-(--border)] mb-4">
             
             <a href="/logout" class="w-full p-2 bg-red-500/10 text-red-500 rounded-lg text-xs flex items-center justify-center gap-2 hover:bg-red-500/20 transition">
                 <span>🚪 Chiqish</span>
             </a>
         </div>
 
-        <div onclick="toggleSettings()" class="flex items-center gap-3 p-3 rounded-2xl bg-white/5 border border-[var(--border)] cursor-pointer hover:bg-white/10 transition">
+        <div onclick="toggleSettings()" class="flex items-center gap-3 p-3 rounded-2xl bg-white/5 border border-(--border)] cursor-pointer hover:bg-white/10 transition">
             <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold" style="background: var(--accent)">
                 {{ request.user.username|default:"U"|first|upper }}
             </div>

@@ -6,3 +6,4 @@ package-lock.json
 package.json
 *.pyc
 node
+db.sqlite3

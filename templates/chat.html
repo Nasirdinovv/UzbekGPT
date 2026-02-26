@@ -1,244 +1,112 @@
-<!DOCTYPE html>
-<html lang="uz">
-<head>
-    <meta charset="UTF-8">
-    <title>O'zbekGPT — Professional</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <style>
-        :root {
-            --bg: #0b0b12; --sidebar: #12121e; --text: #e2e8f0; --border: rgba(255, 255, 255, 0.08);
-            --accent: #6366f1; --bubble-ai: rgba(255, 255, 255, 0.05);
-        }
-        body.light-mode {
-            --bg: #f8fafc; --sidebar: #ffffff; --text: #1e293b; --border: #e2e8f0;
-            --bubble-ai: #ffffff;
-        }
+{% extends "chat_base.html" %}
 
-        /* 1. O'SHA PASTKI QIZIL BILAN BELGILANGAN XUNUK SCROLLBARNI YO'QOTISH */
-        textarea::-webkit-scrollbar { width: 0px; background: transparent; }
-        textarea { scrollbar-width: none; -ms-overflow-style: none; overflow-y: hidden !important; }
-
-        * { transition: background-color 0.3s ease, color 0.3s ease; box-sizing: border-box; }
-        body { background: var(--bg); color: var(--text); display: flex; height: 100vh; margin: 0; overflow: hidden; font-family: 'Inter', sans-serif; }
-        
-        #sidebar { width: 280px; background: var(--sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
-        #main { flex: 1; display: flex; flex-direction: column; min-width: 0; background: var(--bg); position: relative; }
-        
-        #messages { flex: 1; overflow-y: auto; padding: 20px 10px; display: flex; flex-direction: column; }
-        .chat-container { width: 100%; max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
-
-        .msg-row { display: flex; width: 100%; }
-        .msg-row.user { justify-content: flex-end; }
-        .msg-row.ai { justify-content: flex-start; }
-
-        .msg-content { max-width: 85%; display: flex; flex-direction: column; }
-        
-        .msg-bubble { 
-            padding: 12px 18px; border-radius: 18px; line-height: 1.6; 
-            word-wrap: break-word; overflow-wrap: break-word;
-            max-height: 500px; overflow-y: auto;
-        }
-        .user .msg-bubble { background: var(--accent); color: white; border-bottom-right-radius: 4px; }
-        .ai .msg-bubble { background: var(--bubble-ai); border: 1px solid var(--border); color: var(--text); border-bottom-left-radius: 4px; }
-
-        .copy-btn { 
-            margin-top: 5px; padding: 6px; border-radius: 8px; cursor: pointer; opacity: 0; 
-            transition: 0.2s; background: rgba(0,0,0,0.1); border: 1px solid var(--border); color: var(--text);
-            width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
-        }
-        .msg-row:hover .copy-btn { opacity: 1; }
-
-        #settingsMenu {
-            display: none; position: absolute; bottom: 85px; left: 15px; width: 250px;
-            background: var(--sidebar); border: 1px solid var(--border); border-radius: 20px;
-            padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); z-index: 100;
-        }
-        .color-dot { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
-
-        .input-wrapper { border-top: 1px solid var(--border); padding: 20px; background: var(--bg); }
-        .input-container { 
-            max-width: 800px; margin: 0 auto; display: flex; align-items: flex-end; gap: 10px; 
-            background: var(--bubble-ai); border: 1px solid var(--border); padding: 10px; border-radius: 16px; 
-        }
-        textarea { flex: 1; background: transparent; border: none; outline: none; color: var(--text); resize: none; padding: 5px; max-height: 150px; }
-    </style>
-</head>
-<body>
-
-<nav id="sidebar">
-    <div class="p-6 font-bold text-2xl tracking-tighter" style="color: var(--accent)">O'zbekGPT</div>
-    <div class="flex-1 overflow-y-auto p-4">
-        <button onclick="location.reload()" class="w-full p-3 rounded-xl border border-(--border)] hover:bg-white/5 transition mb-4">+ Yangi Chat</button>
-    </div>
-
-    <div class="p-4 border-t border-(--border)] relative">
-        <div id="settingsMenu">
-            <div class="mb-4">
-                <p class="text-[10px] opacity-50 mb-2 uppercase tracking-widest">Mavzu Rangi</p>
-                <div class="flex gap-2">
-                    <div class="color-dot bg-[#6366f1]" onclick="updateConfig('accent', '#6366f1')"></div>
-                    <div class="color-dot bg-[#10a37f]" onclick="updateConfig('accent', '#10a37f')"></div>
-                    <div class="color-dot bg-[#ec4899]" onclick="updateConfig('accent', '#ec4899')"></div>
-                    <div class="color-dot bg-[#f59e0b]" onclick="updateConfig('accent', '#f59e0b')"></div>
+{% block area %}
+            <div class="flex-1 flex flex-col perspective-card">
+            <div class="card-3d flex flex-col h-full">
+                <!-- Chat Header -->
+                <div class="p-4 border-b border-gray-700 glass-effect">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=face" 
+                                 alt="Sarah" class="w-10 h-10 rounded-full floating">
+                            <div>
+                                <h3 class="font-semibold text-white">Sarah Connor</h3>
+                                <p class="text-sm text-green-400">online</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <button class="p-2 hover:bg-gray-700 rounded-full transition-colors">
+                                <i class="fas fa-video text-gray-400 hover:text-white"></i>
+                            </button>
+                            <button class="p-2 hover:bg-gray-700 rounded-full transition-colors">
+                                <i class="fas fa-phone text-gray-400 hover:text-white"></i>
+                            </button>
+                            <button class="p-2 hover:bg-gray-700 rounded-full transition-colors">
+                                <i class="fas fa-ellipsis-v text-gray-400 hover:text-white"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Messages Area -->
+                <div class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar" id="messagesArea">
+                    <!-- Received Message -->
+                    <div class="flex items-start space-x-2 message-bubble">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=30&h=30&fit=crop&crop=face" 
+                             alt="Sarah" class="w-8 h-8 rounded-full">
+                        <div class="max-w-xs lg:max-w-md">
+                            <div class="bg-gray-700 rounded-2xl rounded-tl-sm p-3 shadow-lg">
+                                <p class="text-white">Hey Nicole! How's the WhatsApp clone coming along?</p>
+                            </div>
+                            <p class="text-xs text-gray-400 mt-1 ml-2">2:45 PM</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Sent Message -->
+                    <div class="flex items-end justify-end space-x-2 message-bubble">
+                        <div class="max-w-xs lg:max-w-md">
+                            <div class="chat-gradient rounded-2xl rounded-tr-sm p-3 shadow-lg">
+                                <p class="text-white">It's going great! Just added some cool 3D effects and animations 🚀</p>
+                            </div>
+                            <div class="flex items-center justify-end mt-1 mr-2 space-x-1">
+                                <p class="text-xs text-gray-400">2:46 PM</p>
+                                <i class="fas fa-check-double text-blue-400 text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Received Message -->
+                    <div class="flex items-start space-x-2 message-bubble">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=30&h=30&fit=crop&crop=face" 
+                             alt="Sarah" class="w-8 h-8 rounded-full">
+                        <div class="max-w-xs lg:max-md">
+                            <div class="bg-gray-700 rounded-2xl rounded-tl-sm p-3 shadow-lg">
+                                <p class="text-white">Awesome! Can't wait to see it. The design looks really modern! ✨</p>
+                            </div>
+                            <p class="text-xs text-gray-400 mt-1 ml-2">2:47 PM</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Sent Message with Image -->
+                    <div class="flex items-end justify-end space-x-2 message-bubble">
+                        <div class="max-w-xs lg:max-w-md">
+                            <div class="chat-gradient rounded-2xl rounded-tr-sm p-3 shadow-lg">
+                                <div class="bg-gray-800 rounded-lg p-3 mb-2">
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-image text-green-300"></i>
+                                        <span class="text-sm text-white">dashboard-preview.png</span>
+                                    </div>
+                                </div>
+                                <p class="text-white">Here's a preview! What do you think?</p>
+                            </div>
+                            <div class="flex items-center justify-end mt-1 mr-2 space-x-1">
+                                <p class="text-xs text-gray-400">2:48 PM</p>
+                                <i class="fas fa-check-double text-blue-400 text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Message Input -->
+                <div class="p-4 border-t border-gray-700 glass-effect">
+                    <div class="flex items-center space-x-3">
+                        <button class="p-2 hover:bg-gray-700 rounded-full transition-colors">
+                            <i class="fas fa-paperclip text-gray-400 hover:text-white"></i>
+                        </button>
+                        <div class="flex-1 relative">
+                            <input type="text" 
+                                   placeholder="Type a message..." 
+                                   class="w-full bg-gray-700 text-white placeholder-gray-400 rounded-full pl-4 pr-12 py-3 focus:outline-none focus:ring-2 focus:ring-green-400 transition-all"
+                                   id="messageInput">
+                            <button class="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 hover:bg-gray-600 rounded-full transition-colors">
+                                <i class="fas fa-smile text-gray-400 hover:text-yellow-400"></i>
+                            </button>
+                        </div>
+                        <button class="p-3 chat-gradient rounded-full hover:scale-105 transition-transform shadow-lg" id="sendButton">
+                            <i class="fas fa-paper-plane text-white"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
-
-            <button onclick="toggleTheme()" id="themeBtn" class="w-full p-2 bg-white/5 border border-(--border)] rounded-lg text-xs mb-4">🌙 Tungi Rejim</button>
-
-            <div class="mb-4">
-                <div class="flex justify-between text-[10px] opacity-50 mb-1 uppercase">
-                    <span>Shrift Hajmi</span>
-                    <span id="fontVal">15px</span>
-                </div>
-                <input type="range" min="12" max="24" value="15" class="w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer" oninput="updateConfig('font', this.value)">
-            </div>
-
-            <hr class="border-(--border)] mb-4">
-            
-            <a href="/logout" class="w-full p-2 bg-red-500/10 text-red-500 rounded-lg text-xs flex items-center justify-center gap-2 hover:bg-red-500/20 transition">
-                <span>🚪 Chiqish</span>
-            </a>
         </div>
-
-        <div onclick="toggleSettings()" class="flex items-center gap-3 p-3 rounded-2xl bg-white/5 border border-(--border)] cursor-pointer hover:bg-white/10 transition">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold" style="background: var(--accent)">
-                {{ request.user.username|default:"U"|first|upper }}
-            </div>
-            <div class="flex-1 overflow-hidden">
-                <p class="text-sm font-bold truncate">{{ request.user.username|default:"Foydalanuvchi" }}</p>
-                <p class="text-[10px] opacity-50 uppercase">Sozlamalar</p>
-            </div>
-        </div>
-    </div>
-</nav>
-
-<main id="main">
-    <div id="messages">
-        <div class="chat-container" id="msg-box">
-            <div id="welcome" class="py-20 text-center">
-                <h1 class="text-4xl font-bold mb-4">Salom, do'stim!</h1>
-                <p class="opacity-50">Savol bering, yordam berishga tayyorman.</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="input-wrapper">
-        <div class="input-container shadow-xl">
-            <textarea id="userInput" placeholder="Xabar yozing..." rows="1" oninput="autoResize(this)"></textarea>
-            <button onclick="handleSend()" class="p-3 rounded-xl text-white hover:scale-110 transition active:scale-95 shadow-lg" style="background: var(--accent)">
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </button>
-        </div>
-    </div>
-</main>
-
-<script>
-    let config = {
-        theme: localStorage.getItem('gpt_theme') || 'dark',
-        accent: localStorage.getItem('gpt_accent') || '#6366f1',
-        font: localStorage.getItem('gpt_font') || '15'
-    };
-
-    // Input balandligini avtomatik to'g'irlash va scrollni berkitish
-    function autoResize(el) {
-        el.style.height = 'auto';
-        el.style.height = el.scrollHeight + 'px';
-    }
-
-    function applyConfig() {
-        document.body.className = config.theme + '-mode';
-        document.documentElement.style.setProperty('--accent', config.accent);
-        document.getElementById('fontVal').innerText = config.font + 'px';
-        document.querySelectorAll('.msg-bubble').forEach(b => b.style.fontSize = config.font + 'px');
-        document.getElementById('themeBtn').innerText = config.theme === 'dark' ? '🌙 Tungi Rejim' : '☀️ Kunduzgi Rejim';
-    }
-
-    function updateConfig(key, val) {
-        config[key] = val;
-        localStorage.setItem('gpt_' + key, val);
-        applyConfig();
-    }
-
-    function toggleTheme() { updateConfig('theme', config.theme === 'dark' ? 'light' : 'dark'); }
-    
-    function toggleSettings() { 
-        const m = document.getElementById('settingsMenu');
-        m.style.display = (m.style.display === 'block') ? 'none' : 'block';
-    }
-
-    async function copyTo(text, btn) {
-        await navigator.clipboard.writeText(text);
-        const old = btn.innerHTML;
-        btn.innerHTML = '✅';
-        setTimeout(() => btn.innerHTML = old, 1500);
-    }
-
-    function appendMsg(role, content) {
-        const box = document.getElementById('msg-box');
-        const row = document.createElement('div');
-        row.className = `msg-row ${role}`;
-        
-        const html = role === 'ai' ? marked.parse(content) : content.replace(/\n/g, '<br>');
-        const icon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
-
-        row.innerHTML = `
-            <div class="msg-content">
-                <div class="msg-bubble" style="font-size: ${config.font}px">${html}</div>
-                <button class="copy-btn" onclick="copyTo(\`${content.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`, this)">${icon}</button>
-            </div>
-        `;
-        box.appendChild(row);
-        document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
-    }
-
-    async function handleSend() {
-        const input = document.getElementById('userInput');
-        const text = input.value.trim();
-        if(!text) return;
-
-        document.getElementById('welcome')?.remove();
-        appendMsg('user', text);
-        input.value = '';
-        input.style.height = 'auto';
-
-        const box = document.getElementById('msg-box');
-        const aiRow = document.createElement('div');
-        aiRow.className = 'msg-row ai';
-        aiRow.innerHTML = `<div class="msg-bubble opacity-50">O'ylamoqdaman...</div>`;
-        box.appendChild(aiRow);
-
-        try {
-            const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-                method: "POST",
-                headers: {
-                    // BU YERGA O'ZINGIZNING OPENROUTER API KALITINGIZNI QO'YING
-                    "Authorization": "Bearer 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",
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    "model": "google/gemini-2.0-flash-001",
-                    "messages": [{"role": "user", "content": text}]
-                })
-            });
-            const data = await res.json();
-            aiRow.remove();
-            
-            if (data.choices && data.choices[0]) {
-                appendMsg('ai', data.choices[0].message.content);
-            } else {
-                appendMsg('ai', "Kechirasiz, javob olishda xatolik yuz berdi.");
-            }
-        } catch (e) {
-            aiRow.innerHTML = `<div class="msg-bubble text-red-500">Ulanishda xato yuz berdi.</div>`;
-        }
-    }
-
-    document.getElementById('userInput').onkeydown = (e) => {
-        if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
-    };
-
-    window.onload = applyConfig;
-</script>
-</body>
-</html>
+{% endblock area %}

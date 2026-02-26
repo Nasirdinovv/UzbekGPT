@@ -1,11 +1,12 @@
 
 <!DOCTYPE html>
+{% load tailwind_tags %}
 <html lang="uz">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Kirish — NexusAI</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  {% tailwind_css %}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
@@ -172,7 +173,7 @@
 
       <p class="text-center text-slate-500 text-sm mt-6">
         Hisob yo'qmi?
-        <a href="{% url 'login_user' %}" class="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">Ro'yxatdan o'ting</a>
+        <a href="{% url 'register_user' %}" class="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">Ro'yxatdan o'ting</a>
       </p>
     </div>
 

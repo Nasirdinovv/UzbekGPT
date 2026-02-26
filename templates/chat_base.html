@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Dashboard - Nicole Shalom</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .chat-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .chat-hover:hover {
+            transform: translateX(8px) scale(1.02);
+            background: rgba(37, 211, 102, 0.1);
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.2);
+        }
+        
+        .message-bubble {
+            animation: messageSlide 0.4s ease-out;
+        }
+        
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .chat-gradient {
+            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+        }
+        
+
+        
+        .online-indicator {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .typing-indicator {
+            animation: typing 1.5s infinite;
+        }
+        
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+        
+        .scroll-smooth {
+            scroll-behavior: smooth;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(37, 211, 102, 0.5);
+            border-radius: 10px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(37, 211, 102, 0.7);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="fixed inset-0 opacity-5">
+        <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;"></div>
+    </div>
+    
+    <!-- Main Container -->
+    <div class="flex h-screen relative z-10">
+        
+        <!-- Sidebar -->
+        <div class="w-80 bg-gray-800 border-r border-gray-700 flex flex-col perspective-card">
+            <div class="card-3d h-full">
+                <!-- Header -->
+                <div class="p-4 border-b border-gray-700 glass-effect">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="relative">
+                                <img src="https://lh3.googleusercontent.com/a/ACg8ocKglmNZhp-djrEiWhstceJqG7kyby7hUn0m3nix2w-WRmkjuTOH=s96-c" 
+                                     alt="Profile" class="w-10 h-10 rounded-full ring-2 ring-green-400 floating">
+                                <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-gray-800 online-indicator"></div>
+                            </div>
+                            <div>
+                                <h2 class="font-semibold text-white">Nicole Shalom</h2>
+                                <p class="text-xs text-gray-400">Developer</p>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="p-2 hover:bg-gray-700 rounded-full transition-colors">
+                                <i class="fas fa-ellipsis-v text-gray-400"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Search -->
+                    <div class="relative">
+                        <input type="text" placeholder="Search or start new chat" 
+                               class="w-full bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 transition-all">
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                </div>
+                
+                <!-- Chat List -->
+                <div class="flex-1 overflow-y-auto custom-scrollbar">
+                    <!-- Chat Item 1 -->
+                    <div class="chat-hover p-4 border-b border-gray-700 cursor-pointer relative">
+                        <div class="flex items-center space-x-3">
+                            <div class="relative">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face" 
+                                     alt="John" class="w-12 h-12 rounded-full">
+                                <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-gray-800"></div>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-semibold text-white truncate">Suhbatchi oddiy</h3>
+                                    <span class="text-xs text-gray-400">2:30 PM</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <p class="text-sm text-gray-400 truncate">Hey! How's the project going?</p>
+                                    <div class="flex items-center space-x-1">
+                                        <div class="w-5 h-5 bg-green-400 rounded-full flex items-center justify-center">
+                                            <span class="text-xs text-black font-bold">3</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Chat Item 2 - Active -->
+                    <div class="chat-hover p-4 border-b border-gray-700 cursor-pointer bg-green-900 bg-opacity-20 border-l-4 ">
+                        <div class="flex items-center space-x-3">
+                            <div class="relative">
+                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=face" 
+                                     alt="Sarah" class="w-12 h-12 rounded-full">
+                                <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full border-2 border-gray-800"></div>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-semibold text-white truncate">Tarixchi</h3>
+                                    <span class="text-xs text-gray-400">1:45 PM</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center space-x-2">
+                                        <div class="typing-indicator w-2 h-2 bg-green-400 rounded-full"></div>
+                                        <p class="text-sm text-green-400">typing...</p>
+                                    </div>
+                                    <i class="fas fa-check-double text-blue-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Chat Item 3 -->
+                    <div class="chat-hover p-4 border-b border-gray-700 cursor-pointer">
+                        <div class="flex items-center space-x-3">
+                            <div class="relative">
+                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face" 
+                                     alt="Mike" class="w-12 h-12 rounded-full">
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-semibold text-white truncate">Matematik</h3>
+                                    <span class="text-xs text-gray-400">12:30 PM</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <p class="text-sm text-gray-400 truncate"></p>
+                                    <i class="fas fa-check-double text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+ 
+                </div>
+            </div>
+        </div>
+        
+        <!-- Chat Area -->
+        {% block area %}
+
+        {% endblock area %}
+    </div>
+    
+    <!-- Developer Credit -->
+    <div class="fixed bottom-4 right-4 glass-effect rounded-lg p-3 floating">
+        <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 chat-gradient rounded-full flex items-center justify-center">
+                <i class="fas fa-code text-white text-xs"></i>
+            </div>
+            <div>
+                <p class="text-xs text-white font-semibold">Developed by</p>
+                <p class="text-xs text-green-400">Nicole Shalom</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Add interactive functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const messageInput = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
+            const messagesArea = document.getElementById('messagesArea');
+            
+            // Send message functionality
+            function sendMessage() {
+                const message = messageInput.value.trim();
+                if (message) {
+                    // Create new message element
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'flex items-end justify-end space-x-2 message-bubble';
+                    messageDiv.innerHTML = `
+                        <div class="max-w-xs lg:max-w-md">
+                            <div class="chat-gradient rounded-2xl rounded-tr-sm p-3 shadow-lg">
+                                <p class="text-white">${message}</p>
+                            </div>
+                            <div class="flex items-center justify-end mt-1 mr-2 space-x-1">
+                                <p class="text-xs text-gray-400">Now</p>
+                                <i class="fas fa-check text-gray-400 text-xs"></i>
+                            </div>
+                        </div>
+                    `;
+                    
+                    messagesArea.appendChild(messageDiv);
+                    messageInput.value = '';
+                    messagesArea.scrollTop = messagesArea.scrollHeight;
+                    
+                    // Simulate read receipt after a delay
+                    setTimeout(() => {
+                        const checkIcon = messageDiv.querySelector('.fa-check');
+                        if (checkIcon) {
+                            checkIcon.className = 'fas fa-check-double text-blue-400 text-xs';
+                        }
+                    }, 1000);
+                }
+            }
+            
+            // Send on Enter key
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            // Send on button click
+            sendButton.addEventListener('click', sendMessage);
+            
+            // Add typing indicator simulation
+            let typingTimeout;
+            messageInput.addEventListener('input', function() {
+                // Clear existing timeout
+                clearTimeout(typingTimeout);
+                
+                // Set new timeout
+                typingTimeout = setTimeout(() => {
+                    // Remove typing indicator logic here if needed
+                }, 1000);
+            });
+            
+            // Add some dynamic effects
+            setInterval(() => {
+                const onlineIndicators = document.querySelectorAll('.online-indicator');
+                onlineIndicators.forEach(indicator => {
+                    indicator.style.transform = `scale(${0.8 + Math.random() * 0.4})`;
+                });
+            }, 2000);
+            
+            // Smooth scroll to bottom
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        });
+    </script>
+</body>
+</html>

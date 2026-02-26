@@ -1,16 +1,14 @@
-{% comment %} Register · HTML
-Copy
-
 <!DOCTYPE html>
+{% load tailwind_tags %}
 <html lang="uz">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ro'yxat — NexusAI</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-  <style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ro'yxat — NexusAI</title>
+{% tailwind_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
     * { font-family: 'DM Sans', sans-serif; }
     h1, h2, .brand { font-family: 'Syne', sans-serif; }
 
@@ -30,7 +28,12 @@ Copy
       animation: drift 8s ease-in-out infinite alternate;
     }
     .orb-1 { width:450px; height:450px; background:#8b5cf6; top:-100px; right:-100px; }
-    .orb-2 { width:350px; height:350px; background:#6366f1; bottom:-80px; left:-80px; animation-delay:4s; }
+    .orb-2 { width:650px; height:3150px; background:#6366f1; bottom:-80px; left:-80px; animation-delay:4s; }
+    .orb-3 { width:250px; height:250px; background:#06b6d4; top:40%; left:50%; animation-delay:6s; }
+    .orb-4 { width:200px; height:200px; background:#f59e0b; top:60%; right:-60px; animation-delay:2s; }
+    .orb-5 { width:150px; height:150px; background:#ec4899; bottom:-40px; right:-0px; animation-delay:5s; }
+    .orb-6 { width:100px; height:100px; background:#10b981; top:50%; left:-140px; animation-delay:3s; }
+    .orb-7 { width:620px; height:720px; background:#3b82f6; bottom:20%; left:50%; animation-delay:7s; }
 
     @keyframes drift {
       from { transform: translate(0,0); }
@@ -88,95 +91,116 @@ Copy
     }
     .fade-up   { animation: fadeUp .5s ease both; }
     .fade-up-2 { animation: fadeUp .5s .1s ease both; }
-  </style>
+</style>
 </head>
 <body class="flex items-center justify-center min-h-screen py-8">
 
-  <div class="bg-grid"></div>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
+    <div class="bg-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+    <div class="orb orb-5"></div>
+    <div class="orb orb-6"></div>
+    <div class="orb orb-7"></div>
 
-  <div class="relative z-10 w-full max-w-md px-4">
+    <div class="relative z-10 w-full max-w-md px-4">
 
-    <!-- Logo -->
-    <div class="text-center mb-8 fade-up">
-      <div class="logo-ring mx-auto mb-4">
-        <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
-          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <h1 class="text-white text-3xl font-extrabold tracking-tight brand">O'zbekGPT</h1>
-      <p class="text-slate-400 text-sm mt-1">Yangi hisob yaratish</p>
-    </div>
-
-    <!-- Card -->
-    <div class="glass-card rounded-2xl p-8 fade-up-2">
-
-      {% if messages %}
-        {% for message in messages %}
-          <div class="alert-error px-4 py-3 mb-5 text-sm flex items-center gap-2">
-            <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#f87171" stroke-width="2"/><path d="M12 8v4M12 16h.01" stroke="#f87171" stroke-width="2" stroke-linecap="round"/></svg>
-            {{ message }}
-          </div>
-        {% endfor %}
-      {% endif %}
-
-      <form method="POST" action="{% url "login_user" %}" class="space-y-4">
-        {% csrf_token %}
-
-        <div>
-          <label class="text-slate-300 text-sm font-medium block mb-2">Foydalanuvchi nomi *</label>
-          <input type="text" name="username" required placeholder="johndoe"
-            class="input-field w-full px-4 py-3 rounded-xl text-sm"/>
+        <!-- Logo -->
+        <div class="text-center mb-8 fade-up">
+            <div class="logo-ring mx-auto mb-4">
+                <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h1 class="text-white text-3xl font-extrabold tracking-tight brand">O'zbekGPT</h1>
+            <p class="text-slate-400 text-sm mt-1">Yangi hisob yaratish</p>
         </div>
 
-        <div>
-          <label class="text-slate-300 text-sm font-medium block mb-2">Email (ixtiyoriy)</label>
-          <input type="email" name="email" placeholder="email@example.com"
-            class="input-field w-full px-4 py-3 rounded-xl text-sm"/>
-        </div>
+        <!-- Card -->
+        <div class="glass-card rounded-2xl p-8 fade-up-2">
 
-        <div>
-          <label class="text-slate-300 text-sm font-medium block mb-2">Parol *</label>
-          <div class="relative">
-            <input type="password" name="password1" id="pass1" required placeholder="Kamida 6 belgi"
-              oninput="checkStrength(this.value)"
-              class="input-field w-full px-4 py-3 pr-12 rounded-xl text-sm"/>
-            <button type="button" onclick="togglePass('pass1')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 transition-colors">
-              <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M1 12C2.73 7.61 7 4 12 4s9.27 3.61 11 8c-1.73 4.39-6 8-11 8S2.73 16.39 1 12z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg>
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'success' %}
+                    <div class="bg-emerald-500/10 border border-emerald-500/25 rounded-xl px-4 py-3 mb-5 text-sm flex items-center gap-2 text-emerald-400">
+                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
+                            <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        {{ message }}
+                    </div>
+                {% else %}
+                    <div class="alert-error px-4 py-3 mb-5 text-sm flex items-center gap-2">
+                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                            <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST" action="{% url 'register_user' %}" class="space-y-4">
+            {% csrf_token %}
+
+            <div>
+                <label class="text-slate-300 text-sm font-medium block mb-2">Ism *</label>
+                <input type="text" name="first_name" required placeholder="johndoe" class="input-field w-full px-4 py-3 rounded-xl text-sm"/>
+            </div>
+
+            <div>
+                <label class="text-slate-300 text-sm font-medium block mb-2">Familiya *</label>
+                <input type="text" name="last_name" required placeholder="johndoe" class="input-field w-full px-4 py-3 rounded-xl text-sm"/>
+            </div>
+
+            <div>
+                <label class="text-slate-300 text-sm font-medium block mb-2">Email *</label>
+                <input type="email" name="email" placeholder="example@example.com" class="input-field w-full px-4 py-3 rounded-xl text-sm"/>
+            </div>
+
+            <div>
+                <label class="text-slate-300 text-sm font-medium block mb-2">Parol *</label>
+                <div class="relative">
+                    <input type="password" name="password" id="password1" required placeholder="Kamida 6 belgi"
+                    oninput="checkStrength(this.value)"
+                    class="input-field w-full px-4 py-3 pr-12 rounded-xl text-sm"/>
+                    <button type="button" onclick="togglePass('password1')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 transition-colors">
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M1 12C2.73 7.61 7 4 12 4s9.27 3.61 11 8c-1.73 4.39-6 8-11 8S2.73 16.39 1 12z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg>
+                    </button>
+                </div>
+
+                <!-- Strength bar -->
+
+                <div class="flex gap-1 mt-2">
+                    <div id="s1" class="strength-bar flex-1 bg-slate-700"></div>
+                    <div id="s2" class="strength-bar flex-1 bg-slate-700"></div>
+                    <div id="s3" class="strength-bar flex-1 bg-slate-700"></div>
+                </div>
+                <p id="strengthText" class="text-xs text-slate-500 mt-1"></p>
+            </div>
+
+            <div>
+                <label class="text-slate-300 text-sm font-medium block mb-2">Parolni tasdiqlash *</label>
+                <div class="relative">
+                    <input type="password" name="password2" id="pass2" required placeholder="Parolni qayta kiriting" class="input-field w-full px-4 py-3 pr-12 rounded-xl text-sm"/>
+                    <button type="button" onclick="togglePass('pass2')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 transition-colors">
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M1 12C2.73 7.61 7 4 12 4s9.27 3.61 11 8c-1.73 4.39-6 8-11 8S2.73 16.39 1 12z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary w-full py-3 rounded-xl text-white font-semibold text-sm mt-2">
+            Ro'yxatdan o'tish →
             </button>
-          </div>
-          <!-- Strength bar -->
-          <div class="flex gap-1 mt-2">
-            <div id="s1" class="strength-bar flex-1 bg-slate-700"></div>
-            <div id="s2" class="strength-bar flex-1 bg-slate-700"></div>
-            <div id="s3" class="strength-bar flex-1 bg-slate-700"></div>
-          </div>
-          <p id="strengthText" class="text-xs text-slate-500 mt-1"></p>
-        </div>
-
+        </form>
         <div>
-          <label class="text-slate-300 text-sm font-medium block mb-2">Parolni tasdiqlash *</label>
-          <div class="relative">
-            <input type="password" name="password2" id="pass2" required placeholder="Parolni qayta kiriting"
-              class="input-field w-full px-4 py-3 pr-12 rounded-xl text-sm"/>
-            <button type="button" onclick="togglePass('pass2')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 transition-colors">
-              <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M1 12C2.73 7.61 7 4 12 4s9.27 3.61 11 8c-1.73 4.39-6 8-11 8S2.73 16.39 1 12z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg>
-            </button>
-          </div>
+            <p class="text-center text-slate-500 text-sm mt-6">
+                Hisobingiz bormi?
+                <a href="{% url 'login_user' %}" class="text-violet-400 hover:text-violet-300 font-medium transition-colors">Kirish</a>
+            </p>
         </div>
-
-        <button type="submit" class="btn-primary w-full py-3 rounded-xl text-white font-semibold text-sm mt-2">
-          Ro'yxatdan o'tish →
-        </button>
-      </form>
-
-      <p class="text-center text-slate-500 text-sm mt-6">
-        Hisobingiz bormi?
-        <a href="{% url 'login_user' %}" class="text-violet-400 hover:text-violet-300 font-medium transition-colors">Kirish</a>
-      </p>
     </div>
-  </div>
 
   <script>
     function togglePass(id) {
@@ -201,7 +225,18 @@ Copy
       txt.textContent = score > 0 ? labels[score-1] : '';
       txt.className = 'text-xs mt-1 ' + ['text-red-400','text-yellow-400','text-emerald-400'][score-1] || 'text-slate-500';
     }
+    // Agar yashil (success) xabar paydo bo'lsa, 3 soniya kutib login sahifasiga o'tadi
+    document.addEventListener('DOMContentLoaded', function() {
+        // Django 'success' xabarini tekshiramiz
+        const successAlert = document.querySelector('.bg-emerald-500\\/10'); 
+        
+        if (successAlert) {
+            setTimeout(function() {
+                // Login sahifangizning URL manzili (masalan /login/)
+                window.location.href = "{% url 'login_user' %}";
+            }, 3500); // 3.5 soniya kutadi
+        }
+    });
   </script>
 </body>
 </html>
- {% endcomment %}

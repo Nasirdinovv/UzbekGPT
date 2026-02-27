@@ -219,6 +219,10 @@
  
                 </div>
             </div>
+
+            <div class="footer-quit h-20  bg-gray-800 border-t border-gray-700 flex items-center justify-center cursor-pointer hover:bg-gray-700 hover:text-red-500 transition-colors">
+                <a href="{% url 'logout_user' %}" class=" flex items-center justify-center  px-10 w-full h-full">Chiqish</a>
+            </div>
         </div>
         
         <!-- Chat Area -->
@@ -227,18 +231,6 @@
         {% endblock area %}
     </div>
     
-    <!-- Developer Credit -->
-    <div class="fixed bottom-4 right-4 glass-effect rounded-lg p-3 floating">
-        <div class="flex items-center space-x-2">
-            <div class="w-8 h-8 chat-gradient rounded-full flex items-center justify-center">
-                <i class="fas fa-code text-white text-xs"></i>
-            </div>
-            <div>
-                <p class="text-xs text-white font-semibold">Developed by</p>
-                <p class="text-xs text-green-400">Nicole Shalom</p>
-            </div>
-        </div>
-    </div>
     
     <script>
         // Add interactive functionality

@@ -19,12 +19,11 @@ def login_user(request):
         email = request.POST.get("email")
         password = request.POST.get("password")
         
-        # Django default User modelida username ishlatadi
         user = authenticate(request, username=email, password=password)
 
         if user is not None:
             login(request, user)
-            return redirect("index") # Login bo'lgach indexga qaytadi
+            return redirect("index" "") 
         else:
             messages.error(request, "Email yoki parol noto'g'ri")
             return redirect("login_user")

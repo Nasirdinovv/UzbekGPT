@@ -2,12 +2,14 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
-from umumiy.models import UserProfile
+from httpx import request
+from umumiy.models import UserProfile, Ai_agent
 
 
 def index(request):
     # Bu yerda hech qanday redirect kerak emas, shunchaki index.html ni ochamiz
     return render(request, "index.html")
+
 
 def login_user(request):
     if request.user.is_authenticated:
@@ -33,6 +35,7 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     return redirect("index")
+
 
 def register(request):
     if request.user.is_authenticated:
@@ -70,8 +73,15 @@ def register(request):
 
     return render(request, "register.html")
 
-def chat(request):
-    # Chatga faqat login qilganlar kirishi uchun
-    if not request.user.is_authenticated:
-        return redirect("login_user")
-    return render(request, "chat.html")
+
+def chat(request, agent_id):
+    agents = Ai_agent.objects.all()
+
+    if agent_id != 0:
+        agent = Ai_agent.objects.get(id=agent_id)
+
+        return render(request, "chat.html", {"agent": agent, "agents": agents})
+    
+    else:
+
+        return render(request, "chat.html", {"agents": agents})

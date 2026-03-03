@@ -150,75 +150,39 @@
                 <!-- Chat List -->
                 <div class="flex-1 overflow-y-auto custom-scrollbar">
                     <!-- Chat Item 1 -->
-                    <div class="chat-hover p-4 border-b border-gray-700 cursor-pointer relative">
-                        <div class="flex items-center space-x-3">
-                            <div class="relative">
-                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face" 
-                                     alt="John" class="w-12 h-12 rounded-full">
-                                <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-gray-800"></div>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="flex justify-between items-start">
-                                    <h3 class="font-semibold text-white truncate">Suhbatchi oddiy</h3>
-                                    <span class="text-xs text-gray-400">2:30 PM</span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <p class="text-sm text-gray-400 truncate">Hey! How's the project going?</p>
-                                    <div class="flex items-center space-x-1">
-                                        <div class="w-5 h-5 bg-green-400 rounded-full flex items-center justify-center">
-                                            <span class="text-xs text-black font-bold">3</span>
+                    {% for agent in agents %}
+                      
+                        <div class="chat-hover p-4 border-b border-gray-700 cursor-pointer relative">
+                            <a href="{% url 'chat' agent.id %}">
+                                <div class="flex items-center space-x-3">
+
+                                    <div class="relative">
+                                        
+                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face" 
+                                            alt="John" class="w-12 h-12 rounded-full">
+                                        <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-gray-800"></div>
+                                        
+                                    </div>
+
+                                    <div class="flex-1 min-w-0">
+
+                                        <div class="flex justify-between items-start">
+                                            <i class="{{agent.icon}}"> </i>
+                                            <h3 class="font-semibold text-white truncate">{{ agent.name }}</h3>
                                         </div>
+
+                                        <div class="flex justify-between items-center">
+                                            <p class="text-sm text-gray-400 truncate">{{ agent.kasbi}}</p>
+                                            <div class="flex items-center space-x-1"></div>
+                                        </div>
+                                        
                                     </div>
+
                                 </div>
-                            </div>
+                            </a>
                         </div>
-                    </div>
-                    
-                    <!-- Chat Item 2 - Active -->
-                    <div class="chat-hover p-4 border-b border-gray-700 cursor-pointer bg-green-900 bg-opacity-20 border-l-4 ">
-                        <div class="flex items-center space-x-3">
-                            <div class="relative">
-                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=face" 
-                                     alt="Sarah" class="w-12 h-12 rounded-full">
-                                <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full border-2 border-gray-800"></div>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="flex justify-between items-start">
-                                    <h3 class="font-semibold text-white truncate">Tarixchi</h3>
-                                    <span class="text-xs text-gray-400">1:45 PM</span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <div class="flex items-center space-x-2">
-                                        <div class="typing-indicator w-2 h-2 bg-green-400 rounded-full"></div>
-                                        <p class="text-sm text-green-400">typing...</p>
-                                    </div>
-                                    <i class="fas fa-check-double text-blue-400"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Chat Item 3 -->
-                    <div class="chat-hover p-4 border-b border-gray-700 cursor-pointer">
-                        <div class="flex items-center space-x-3">
-                            <div class="relative">
-                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face" 
-                                     alt="Mike" class="w-12 h-12 rounded-full">
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="flex justify-between items-start">
-                                    <h3 class="font-semibold text-white truncate">Matematik</h3>
-                                    <span class="text-xs text-gray-400">12:30 PM</span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <p class="text-sm text-gray-400 truncate"></p>
-                                    <i class="fas fa-check-double text-gray-400"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
- 
+                    {% endfor %}
+
                 </div>
             </div>
 

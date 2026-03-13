@@ -32,61 +32,40 @@
                 
                 <!-- Messages Area -->
                 <div class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar" id="messagesArea">
-                    <!-- Received Message -->
-                    <div class="flex items-start space-x-2 message-bubble">
-                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=30&h=30&fit=crop&crop=face" 
-                             alt="Sarah" class="w-8 h-8 rounded-full">
-                        <div class="max-w-xs lg:max-w-md">
-                            <div class="bg-gray-700 rounded-2xl rounded-tl-sm p-3 shadow-lg">
-                                <p class="text-white">Hey Nicole! How's the WhatsApp clone coming along?</p>
-                            </div>
-                            <p class="text-xs text-gray-400 mt-1 ml-2">2:45 PM</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Sent Message -->
-                    <div class="flex items-end justify-end space-x-2 message-bubble">
-                        <div class="max-w-xs lg:max-w-md">
-                            <div class="chat-gradient rounded-2xl rounded-tr-sm p-3 shadow-lg">
-                                <p class="text-white">It's going great! Just added some cool 3D effects and animations 🚀</p>
-                            </div>
-                            <div class="flex items-center justify-end mt-1 mr-2 space-x-1">
-                                <p class="text-xs text-gray-400">2:46 PM</p>
-                                <i class="fas fa-check-double text-blue-400 text-xs"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Received Message -->
-                    <div class="flex items-start space-x-2 message-bubble">
-                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=30&h=30&fit=crop&crop=face" 
-                             alt="Sarah" class="w-8 h-8 rounded-full">
-                        <div class="max-w-xs lg:max-md">
-                            <div class="bg-gray-700 rounded-2xl rounded-tl-sm p-3 shadow-lg">
-                                <p class="text-white">Awesome! Can't wait to see it. The design looks really modern! ✨</p>
-                            </div>
-                            <p class="text-xs text-gray-400 mt-1 ml-2">2:47 PM</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Sent Message with Image -->
-                    <div class="flex items-end justify-end space-x-2 message-bubble">
-                        <div class="max-w-xs lg:max-w-md">
-                            <div class="chat-gradient rounded-2xl rounded-tr-sm p-3 shadow-lg">
-                                <div class="bg-gray-800 rounded-lg p-3 mb-2">
-                                    <div class="flex items-center space-x-2">
-                                        <i class="fas fa-image text-green-300"></i>
-                                        <span class="text-sm text-white">dashboard-preview.png</span>
+                    {% for message in history %}
+                        {% if message.kimdan == 'agent' %}
+                            <!-- Agent Message -->
+                            <div class="flex items-start space-x-2 message-bubble">
+                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=30&h=30&fit=crop&crop=face" 
+                                    alt="Sarah" class="w-8 h-8 rounded-full">
+                                <div class="max-w-xs lg:max-w-md">
+                                    <div class="bg-gray-700 rounded-2xl rounded-tl-sm p-3 shadow-lg">
+                                        <p class="text-white">{{message.text}}</p>
                                     </div>
+                                    <p class="text-xs text-gray-400 mt-1 ml-2">{{message.created_at|date:"g:i A"}}</p>
                                 </div>
-                                <p class="text-white">Here's a preview! What do you think?</p>
                             </div>
-                            <div class="flex items-center justify-end mt-1 mr-2 space-x-1">
-                                <p class="text-xs text-gray-400">2:48 PM</p>
-                                <i class="fas fa-check-double text-blue-400 text-xs"></i>
+
+                        {% else %}
+                        
+                        
+                        <!-- User Message -->
+                        <div class="flex items-end justify-end space-x-2 message-bubble">
+                            <div class="max-w-xs lg:max-w-md">
+                                <div class="chat-gradient rounded-2xl rounded-tr-sm p-3 shadow-lg">
+                                    <p class="text-white">{{message.text}}</p>
+                                </div>
+                                <div class="flex items-center justify-end mt-1 mr-2 space-x-1">
+                                    <p class="text-xs text-gray-400">{{message.created_at|date:"g:i A"}}</p>
+                                    <i class="fas fa-check-double text-blue-400 text-xs"></i>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    
+
                 </div>
                 
                 <!-- Message Input -->
@@ -109,6 +88,7 @@
                         </button>
                     </div>
                 </div>
+
             </div>
         {% else %}
             <div class="card-3d flex flex-col h-full">

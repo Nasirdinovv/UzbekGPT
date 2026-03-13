@@ -54,7 +54,7 @@ class History(models.Model):
     kimdan = models.CharField(choices=KIMDAN, max_length=10)
 
     def __str__(self):
-        return f"{self.user.email} - {self.agent.name} - {self.kasi }"
+        return f"{self.user_id.email} - {self.agent_id.name}"
     
 
 

@@ -79,7 +79,7 @@ def chat(request, agent_id):
 
     if agent_id != 0:
         agent = Ai_agent.objects.get(id=agent_id)
-        history = History.objects.filter(agent_id=agent_id, user_id=request.user.id)
+        history = History.objects.filter(agent_id=agent, user_id=user)
 
         return render(request, "chat.html", {"agent": agent, "agents": agents, "history": history})
     

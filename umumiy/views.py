@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from httpx import request
-from umumiy.models import UserProfile, Ai_agent
+from umumiy.models import UserProfile, Ai_agent, History
 
 
 def index(request):
@@ -75,11 +75,13 @@ def register(request):
 
 def chat(request, agent_id):
     agents = Ai_agent.objects.all()
+    user = request.user
 
     if agent_id != 0:
         agent = Ai_agent.objects.get(id=agent_id)
+        history = History.objects.filter(agent_id=agent_id, user_id=request.user.id)
 
-        return render(request, "chat.html", {"agent": agent, "agents": agents})
+        return render(request, "chat.html", {"agent": agent, "agents": agents, "history": history})
     
     else:
 

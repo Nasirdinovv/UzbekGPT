@@ -10,6 +10,26 @@ from google import genai
 
 client = genai.Client(api_key=API_KEY)
 
+def chat_agent(role = "oddiy suhbatdosh", message = "Sen nimalar gila olasan?"):
+
+    contents = f"""
+
+        SEN BU ROLDAGI {role} PROFESSIONAL SUXBATDOSHSAN. fagat shu mavzudagi savollarga javob gaytarasan
+
+        agar boshqa mavzuda savol berishsa 'Uzr men bu mavzuda gaplasha olmayman
+
+        seni javobing uzunligi har doim eng ko'p bilan 200 ta so'zdan iborat bo'lsin. Fagat mavzu bo'yicha berilgan savolga javob gaytar.
+        savol: {message}
+
+        Javob har doim oddiy text bo'lsin
+
+    """
+
+    response = client.models.generate_content(
+        model="gemini-2.0-flash", contents=contents
+    )
+    return response.text
+
 def index(request):
     return render(request, "index.html")
 
@@ -95,9 +115,9 @@ def ChatResponse(request, agent_id):
 
         user = request.user
         ai_agent = Ai_agent.objects.get(id=agent_id)
-        user_message = request.POST.get("message")
+        text = request.POST.get("text")
+        ai_response = chat_agent(role=ai_agent.shaxsiyati, message=text)
 
-        ai_response = chat_agent.generate_response(user_message)
         try:
             # AI javobini saqlash 
             new_agent_message = History.objects.create(
@@ -110,7 +130,7 @@ def ChatResponse(request, agent_id):
             new_user_message = History.objects.create(
                 user_id=user,
                 agent_id=ai_agent,
-                message=ai_response,
+                message=text,
                 sender="user"
             )
             print("User message saved:", new_user_message)

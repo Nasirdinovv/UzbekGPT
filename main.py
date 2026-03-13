@@ -19,11 +19,7 @@ def chat_agent(role = "oddiy suhbatdosh", message = "Sen nimalar gila olasan?"):
     """
 
     response = client.models.generate_content(
-        model="gemini-3-flash-preview", contents=contents
+        model="gemini-2.0-flash", contents=contents
     )
     return response.text
 
-# tarixchi = chat_agent(role="tarixchi", message="Amir temur haqida gapir va uning tarixdagi o'rni haqida gapir")
-# matematik = chat_agent(role="matematik", message="Pifagor teoremasi haqida gapir")
-suhbatchi = chat_agent(role="suhbatchi", message="salom")
-print(suhbatchi)

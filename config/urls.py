@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path
-from umumiy.views import login_user, index, chat, logout_user, register
+from umumiy import views
+from umumiy.views import login_user, index, chat, logout_user, register, ChatResponse
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -9,4 +10,5 @@ urlpatterns = [
     path('chat/<int:agent_id>/', chat, name='chat'),
     path('logout/', logout_user, name='logout_user'),
     path('register/', register, name='register_user'),
+    path('chat-response/<int:agent_id>/', ChatResponse, name='chat_response'),
 ]

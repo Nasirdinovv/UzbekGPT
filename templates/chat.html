@@ -73,23 +73,30 @@
                 
                 <!-- Message Input -->
                 <div class="p-3 border-t border-gray-700 glass-effect">
-                    <div class="flex items-center space-x-3">
-                        <button class="p-2 hover:bg-gray-700 rounded-full transition-colors">
-                            <i class="fas fa-paperclip text-gray-400 hover:text-white"></i>
-                        </button>
-                        <div class="flex-1 relative">
-                            <input type="text" 
-                                   placeholder="Type a message..." 
-                                   class="w-full bg-gray-700 text-white placeholder-gray-400 rounded-full pl-4 pr-12 py-3 focus:outline-none focus:ring-2 focus:ring-green-400 transition-all"
-                                   id="messageInput">
-                            <button class="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 hover:bg-gray-600 rounded-full transition-colors">
-                                <i class="fas fa-smile text-gray-400 hover:text-yellow-400"></i>
+                    
+                    <form action="{% url 'chat_response'%}" method="post" >
+                        {% csrf_token %}
+                        <input type="hidden" name="agent" value="{{ agent.id }}">
+                        <div class="flex items-center space-x-3">
+                            <button class="p-2 hover:bg-gray-700 rounded-full transition-colors"> </button>
+
+                            <div class="flex-1 relative">
+                                <input type="text"
+                                    name="text"
+                                    placeholder="Type a message..." 
+                                    class="w-full bg-gray-700 text-white placeholder-gray-400 rounded-full pl-4 pr-12 py-3 focus:outline-none focus:ring-2 focus:ring-green-400 transition-all"
+                                    id="messageInput">
+                                <button class="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 hover:bg-gray-600 rounded-full transition-colors">
+                                    
+                                </button>
+                            </div>
+
+                            <button class="p-3 chat-gradient rounded-full hover:scale-105 transition-transform shadow-lg" id="sendButton">
+                                <i class="fas fa-paper-plane text-white"></i>
                             </button>
                         </div>
-                        <button class="p-3 chat-gradient rounded-full hover:scale-105 transition-transform shadow-lg" id="sendButton">
-                            <i class="fas fa-paper-plane text-white"></i>
-                        </button>
-                    </div>
+                        </form>
+                        
                 </div>
 
             </div>

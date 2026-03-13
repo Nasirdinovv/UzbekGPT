@@ -4,10 +4,13 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from httpx import request
 from umumiy.models import UserProfile, Ai_agent, History
+from main import chat_agent
+from API_KEY import API_KEY
+from google import genai
 
+client = genai.Client(api_key=API_KEY)
 
 def index(request):
-    # Bu yerda hech qanday redirect kerak emas, shunchaki index.html ni ochamiz
     return render(request, "index.html")
 
 
@@ -55,6 +58,7 @@ def register(request):
         if UserProfile.objects.filter(email=email).exists():
             messages.error(request, "Bu email allaqachon ro'yxatdan o'tgan")
             return redirect("register_user")
+        
         try:
             # UserProfile orqali foydalanuvchi yaratish
             new_user = UserProfile.objects.create_user(
@@ -82,7 +86,36 @@ def chat(request, agent_id):
         history = History.objects.filter(agent_id=agent, user_id=user)
 
         return render(request, "chat.html", {"agent": agent, "agents": agents, "history": history})
-    
     else:
-
         return render(request, "chat.html", {"agents": agents})
+
+
+def ChatResponse(request, agent_id):
+    if request.method == "POST":
+
+        user = request.user
+        ai_agent = Ai_agent.objects.get(id=agent_id)
+        user_message = request.POST.get("message")
+
+        ai_response = chat_agent.generate_response(user_message)
+        try:
+            # AI javobini saqlash 
+            new_agent_message = History.objects.create(
+                user_id=user,
+                agent_id=ai_agent,
+                message=ai_response,
+                sender="agent"
+            )
+            # User javobini saqlash
+            new_user_message = History.objects.create(
+                user_id=user,
+                agent_id=ai_agent,
+                message=ai_response,
+                sender="user"
+            )
+            print("User message saved:", new_user_message)
+            print("AI response saved:", new_agent_message)
+            return redirect("chat", agent_id)
+        except Exception as e:
+            messages.error(request, f"Xatolik: {e}")
+            return redirect("chat", agent_id=agent_id)

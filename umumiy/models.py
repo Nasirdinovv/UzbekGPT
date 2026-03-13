@@ -47,8 +47,8 @@ class History(models.Model):
         ('agent', 'Agent'),
     ]
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    agent = models.ForeignKey(Ai_agent, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    agent_id = models.ForeignKey(Ai_agent, on_delete=models.CASCADE)
     text = models.TextField()
 
     kimdan = models.CharField(choices=KIMDAN, max_length=10)

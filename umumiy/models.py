@@ -47,7 +47,7 @@ class History(models.Model):
         ('agent', 'Agent'),
     ]
 
-    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     agent_id = models.ForeignKey(Ai_agent, on_delete=models.CASCADE)
     text = models.TextField()
 
